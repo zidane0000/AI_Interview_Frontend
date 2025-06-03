@@ -59,4 +59,5 @@ export interface SendMessageRequest {
 export interface SendMessageResponse {
   message: ChatMessage;
   ai_response?: ChatMessage;
+  session_status: string;
 }

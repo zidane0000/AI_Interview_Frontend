@@ -91,19 +91,25 @@ const TakeInterview: React.FC = () => {
       } : null);
 
       // 清空輸入框
-      setCurrentMessage('');
-
-      // 發送訊息到 API 並等待 AI 回應
+      setCurrentMessage('');      // 發送訊息到 API 並等待 AI 回應
       const response = await interviewApi.sendMessage(chatSession.id, {
         interview_id: chatSession.interview_id,
         message: messageToSend
-      });      // 添加 AI 回應到聊天記錄
+      });
+
+      // 添加 AI 回應到聊天記錄並更新會話狀態
       if (response.ai_response) {
         const aiResponse = response.ai_response;
         setChatSession(prev => prev ? {
           ...prev,
           messages: [...prev.messages, aiResponse],
-          status: aiResponse.content.includes('concludes our interview') ? 'completed' : prev.status
+          status: response.session_status === 'completed' ? 'completed' : prev.status
+        } : null);
+      } else {
+        // 如果沒有 AI 回應，仍然要更新會話狀態
+        setChatSession(prev => prev ? {
+          ...prev,
+          status: response.session_status === 'completed' ? 'completed' : prev.status
         } : null);
       }
 
