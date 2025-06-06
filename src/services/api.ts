@@ -52,10 +52,19 @@ const realApi = {
     const response = await api.post<Interview>('/interviews', data);
     return response.data;
   },
-
-  // Get all interviews
-  getInterviews: async (): Promise<ListInterviewsResponse> => {
-    const response = await api.get<ListInterviewsResponse>('/interviews');
+  // Get all interviews with optional query parameters for pagination, filtering, and sorting
+  getInterviews: async (params?: {
+    limit?: number;
+    offset?: number;
+    page?: number;
+    candidate_name?: string;
+    status?: string;
+    date_from?: string;
+    date_to?: string;
+    sort_by?: 'date' | 'name' | 'status';
+    sort_order?: 'asc' | 'desc';
+  }): Promise<ListInterviewsResponse> => {
+    const response = await api.get<ListInterviewsResponse>('/interviews', { params });
     return response.data;
   },
 

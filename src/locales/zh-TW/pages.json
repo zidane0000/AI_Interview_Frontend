@@ -2,10 +2,20 @@
   "home": {
     "title": "AI 模擬面試練習平台",
     "subtitle": "熟能生巧 - 透過 AI 模擬真實面試情境",
-    "createNewInterview": "建立新面試",    "recentInterviews": "最近的面試",
+    "createNewInterview": "建立新面試",
+    "recentInterviews": "最近的面試",
     "noInterviews": "尚無面試記錄。建立您的第一個模擬面試開始練習！",
     "questionsCount": "{{count}} 個問題",
     "questionsPreview": "問題預覽：",
+    "searchPlaceholder": "依候選人姓名搜尋...",
+    "sortBy": "排序方式",
+    "sortByDate": "日期",
+    "sortByName": "姓名",
+    "sortByStatus": "狀態",
+    "sortOrder": "排序順序",
+    "sortOrderDesc": "最新優先",
+    "sortOrderAsc": "最舊優先",
+    "resultsSummary": "顯示 {{showing}} 筆，共 {{total}} 筆面試記錄（第 {{page}} 頁，共 {{totalPages}} 頁）",
     "featuresTitle": "為什麼選擇我們的平台？",
     "features": {
       "ai": {
@@ -21,7 +31,8 @@
         "description": "透過全面的表現分析追蹤您的進步"
       }
     }
-  },  "mockInterview": {
+  },
+  "mockInterview": {
     "title": "建立模擬面試",
     "subtitle": "設定候選人資訊和面試問題，打造客製化的 AI 面試體驗",
     "candidateInfo": "候選人資訊",
@@ -54,7 +65,8 @@
     "createInterview": "建立面試",
     "creating": "建立中...",
     "fillCandidateName": "請填寫候選人姓名即可開始練習（問題可選填，AI 會自動補充）"
-  },  "interviewDetail": {
+  },
+  "interviewDetail": {
     "title": "面試詳情",
     "candidate": "候選人資訊",
     "type": "類型",
@@ -79,7 +91,8 @@
       "回答完所有問題後提交",
       "提交後將獲得 AI 評估"
     ]
-  },"takeInterview": {
+  },
+  "takeInterview": {
     "title": "面試進行中",
     "interviewTitle": "面試：{{candidate}}",
     "completed": "面試已完成",
@@ -97,7 +110,8 @@
     "nextQuestion": "下一個問題",
     "finishInterview": "完成面試",
     "confirmFinish": "確定要完成面試嗎？完成後將無法修改您的回答。"
-  },  "evaluationResult": {
+  },
+  "evaluationResult": {
     "title": "面試評估結果",
     "completedOn": "完成於",
     "overallPerformance": "整體表現",
@@ -136,7 +150,8 @@
       "fair": "普通",
       "needsImprovement": "需要改進"
     }
-  },"changelog": {
+  },
+  "changelog": {
     "title": "更新日誌",
     "subtitle": "及時了解所有最新功能、改進和修復。",
     "backToHome": "返回首頁",

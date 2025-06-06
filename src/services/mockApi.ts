@@ -14,7 +14,7 @@ import type {
 const mockInterviews: Interview[] = [
   {
     id: '1',
-    candidate_name: '張小明',
+    candidate_name: 'John Smith',
     questions: [
       'Tell me about yourself and your background.',
       'What are your greatest strengths and weaknesses?',
@@ -31,6 +31,106 @@ const mockInterviews: Interview[] = [
       'Where do you see yourself in 5 years?'
     ],
     created_at: '2025-05-29T14:20:00Z'
+  },
+  {
+    id: '3',
+    candidate_name: 'Min-jun Kim', // Korean
+    questions: [
+      'What motivates you at work?',
+      'How do you prioritize your tasks?',
+      'Describe a time you solved a difficult problem.'
+    ],
+    created_at: '2025-05-28T09:15:00Z'
+  },
+  {
+    id: '4',
+    candidate_name: 'Somsak Chaiyaporn', // Thai
+    questions: [
+      'How do you handle feedback?',
+      'What is your leadership style?',
+      'Tell me about a successful project.'
+    ],
+    created_at: '2025-05-27T11:00:00Z'
+  },
+  {
+    id: '5',
+    candidate_name: 'Emily Chen',
+    questions: [
+      'Why did you choose this career?',
+      'How do you keep learning?',
+      'Describe your teamwork experience.'
+    ],
+    created_at: '2025-05-26T13:45:00Z'
+  },
+  {
+    id: '6',
+    candidate_name: '周杰倫',
+    questions: [
+      'What are your hobbies?',
+      'How do you manage deadlines?',
+      'Tell me about a time you failed.'
+    ],
+    created_at: '2025-05-25T15:30:00Z'
+  },
+  {
+    id: '7',
+    candidate_name: 'Sarah Lee',
+    questions: [
+      'How do you handle conflict?',
+      'What is your biggest achievement?',
+      'Describe your ideal job.'
+    ],
+    created_at: '2025-05-24T10:10:00Z'
+  },
+  {
+    id: '8',
+    candidate_name: '徐若瑄',
+    questions: [
+      'How do you stay organized?',
+      'What is your greatest strength?',
+      'How do you handle criticism?'
+    ],
+    created_at: '2025-05-23T16:20:00Z'
+  },
+  {
+    id: '9',
+    candidate_name: 'Ariana Garcia',
+    questions: [
+      'What are your career goals?',
+      'How do you deal with stress?',
+      'Describe a time you worked in a team.'
+    ],
+    created_at: '2025-05-22T12:00:00Z'
+  },
+  {
+    id: '10',
+    candidate_name: '羅志祥',
+    questions: [
+      'Why should we hire you?',
+      'How do you handle multitasking?',
+      'Tell me about a time you exceeded expectations.'
+    ],
+    created_at: '2025-05-21T14:50:00Z'
+  },
+  {
+    id: '11',
+    candidate_name: 'Jiraporn Suksawat', // Thai
+    questions: [
+      'What is your biggest weakness?',
+      'How do you set goals?',
+      'Describe a time you learned from a mistake.'
+    ],
+    created_at: '2025-05-20T09:40:00Z'
+  },
+  {
+    id: '12',
+    candidate_name: '林俊傑',
+    questions: [
+      'How do you handle change?',
+      'What motivates you to do your best?',
+      'Tell me about a time you led a team.'
+    ],
+    created_at: '2025-05-19T11:25:00Z'
   }
 ];
 
@@ -39,25 +139,145 @@ const mockEvaluations: Evaluation[] = [
     id: '1',
     interview_id: '1',
     answers: {
-      'question_0': 'I am a software engineer with 5 years of experience in frontend development, particularly with React and TypeScript. I have worked on various projects from e-commerce platforms to enterprise applications.',
-      'question_1': 'My greatest strength is my ability to learn quickly and adapt to new technologies. I am also very detail-oriented which helps me write clean, maintainable code. As for weaknesses, I sometimes spend too much time perfecting code when good enough would suffice, but I am working on balancing quality with efficiency.',
-      'question_2': 'I am very interested in this position because it aligns perfectly with my career goals of working on innovative AI-driven products. Your company\'s focus on cutting-edge technology and the opportunity to work with a talented team really excites me.'
+      'question_0': 'I am a software engineer from the US with 7 years of experience.',
+      'question_1': 'My greatest strength is adaptability. My weakness is sometimes overthinking.',
+      'question_2': 'I am interested in this position because it matches my skills and career goals.'
     },
     score: 0.85,
-    feedback: 'Excellent performance! You demonstrated strong technical knowledge and communication skills. Your answers were well-structured and showed deep understanding of software development principles. Areas for improvement: Could provide more specific examples of past projects. Overall, you would be a great fit for our team.',
+    feedback: 'Strong technical background and clear motivation.',
     created_at: '2025-05-30T11:45:00Z'
   },
   {
     id: '2',
     interview_id: '2',
     answers: {
-      'question_0': 'I worked on a complex e-commerce platform where we had to integrate multiple payment systems and handle high traffic loads. It was challenging because of the strict deadline and technical requirements.',
-      'question_1': 'I handle stress by breaking down tasks into smaller, manageable pieces and prioritizing them. I also make sure to take regular breaks and communicate with my team when I need support.',
-      'question_2': 'This position offers great growth opportunities and the chance to work with modern technologies. I believe my skills would contribute well to your development team.'
+      'question_0': 'I worked on a complex e-commerce platform.',
+      'question_1': 'I handle stress by planning and prioritizing.',
+      'question_2': 'In 5 years, I see myself leading a team.'
     },
     score: 0.78,
-    feedback: 'Good interview performance! You showed solid technical fundamentals and enthusiasm for learning. Your answers were clear and honest. Suggestions for improvement: Provide more specific examples of your achievements and impact in previous roles. Consider preparing more detailed stories about challenging projects you have worked on.',
-    created_at: '2025-05-28T14:20:00Z'
+    feedback: 'Good project experience and stress management.',
+    created_at: '2025-05-29T15:00:00Z'
+  },
+  {
+    id: '3',
+    interview_id: '3',
+    answers: {
+      'question_0': 'I am motivated by learning new things.',
+      'question_1': 'I use lists and tools to prioritize.',
+      'question_2': 'I solved a production bug under pressure.'
+    },
+    score: 0.82,
+    feedback: 'Shows motivation and problem-solving skills.',
+    created_at: '2025-05-28T10:00:00Z'
+  },
+  {
+    id: '4',
+    interview_id: '4',
+    answers: {
+      'question_0': 'I appreciate feedback for growth.',
+      'question_1': 'My leadership is collaborative.',
+      'question_2': 'Led a team to deliver a successful app.'
+    },
+    score: 0.80,
+    feedback: 'Good leadership and openness to feedback.',
+    created_at: '2025-05-27T12:00:00Z'
+  },
+  {
+    id: '5',
+    interview_id: '5',
+    answers: {
+      'question_0': 'I chose this career for its impact.',
+      'question_1': 'I take online courses to keep learning.',
+      'question_2': 'I enjoy collaborating in teams.'
+    },
+    score: 0.77,
+    feedback: 'Strong teamwork and learning attitude.',
+    created_at: '2025-05-26T14:00:00Z'
+  },
+  {
+    id: '6',
+    interview_id: '6',
+    answers: {
+      'question_0': 'I enjoy music and sports.',
+      'question_1': 'I use calendars to manage deadlines.',
+      'question_2': 'I failed a project but learned a lot.'
+    },
+    score: 0.75,
+    feedback: 'Good self-awareness and time management.',
+    created_at: '2025-05-25T16:00:00Z'
+  },
+  {
+    id: '7',
+    interview_id: '7',
+    answers: {
+      'question_0': 'I resolve conflict by listening.',
+      'question_1': 'My biggest achievement is winning a hackathon.',
+      'question_2': 'My ideal job is creative and challenging.'
+    },
+    score: 0.81,
+    feedback: 'Excellent conflict resolution and ambition.',
+    created_at: '2025-05-24T11:00:00Z'
+  },
+  {
+    id: '8',
+    interview_id: '8',
+    answers: {
+      'question_0': 'I use digital tools to stay organized.',
+      'question_1': 'My greatest strength is persistence.',
+      'question_2': 'I accept criticism and improve.'
+    },
+    score: 0.79,
+    feedback: 'Organized and open to feedback.',
+    created_at: '2025-05-23T17:00:00Z'
+  },
+  {
+    id: '9',
+    interview_id: '9',
+    answers: {
+      'question_0': 'My goal is to become a manager.',
+      'question_1': 'I meditate to deal with stress.',
+      'question_2': 'I worked in a diverse team.'
+    },
+    score: 0.76,
+    feedback: 'Clear goals and stress management.',
+    created_at: '2025-05-22T13:00:00Z'
+  },
+  {
+    id: '10',
+    interview_id: '10',
+    answers: {
+      'question_0': 'You should hire me for my experience.',
+      'question_1': 'I use checklists for multitasking.',
+      'question_2': 'I exceeded expectations in my last job.'
+    },
+    score: 0.83,
+    feedback: 'Strong experience and reliability.',
+    created_at: '2025-05-21T15:00:00Z'
+  },
+  {
+    id: '11',
+    interview_id: '11',
+    answers: {
+      'question_0': 'My biggest weakness is impatience.',
+      'question_1': 'I set goals using SMART criteria.',
+      'question_2': 'I learned from a failed project.'
+    },
+    score: 0.74,
+    feedback: 'Honest self-reflection and goal setting.',
+    created_at: '2025-05-20T10:00:00Z'
+  },
+  {
+    id: '12',
+    interview_id: '12',
+    answers: {
+      'question_0': 'I handle change by staying flexible.',
+      'question_1': 'Helping others motivates me.',
+      'question_2': 'I led a team to launch a new product.'
+    },
+    score: 0.84,
+    feedback: 'Adaptable and strong leadership.',
+    created_at: '2025-05-19T12:00:00Z'
   }
 ];
 
@@ -102,13 +322,103 @@ export const mockApi = {
     return newInterview;
   },
 
-  getInterviews: async (): Promise<ListInterviewsResponse> => {
+  getInterviews: async (params?: {
+    limit?: number;
+    offset?: number;
+    page?: number;
+    candidate_name?: string;
+    status?: string;
+    date_from?: string;
+    date_to?: string;
+    sort_by?: 'date' | 'name' | 'status';
+    sort_order?: 'asc' | 'desc';
+  }): Promise<ListInterviewsResponse> => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
     
+    console.log('Mock API getInterviews called with params:', params);
+
+    let interviews = [...mockInterviews];
+
+    // Apply filtering
+    if (params) {
+      const { candidate_name, status, date_from, date_to, sort_by, sort_order } = params;
+      
+      // Filter by candidate name
+      if (candidate_name && candidate_name.trim()) {
+        const searchTerm = candidate_name.toLowerCase();
+        interviews = interviews.filter(interview => 
+          interview.candidate_name.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      // Filter by status (if provided)
+      if (status) {
+        // For mock data, we don't have status field, so we'll skip this filter
+        // In real implementation, this would filter by interview status
+      }
+
+      // Filter by date range
+      if (date_from) {
+        interviews = interviews.filter(interview => 
+          interview.created_at >= date_from
+        );
+      }
+      if (date_to) {
+        interviews = interviews.filter(interview => 
+          interview.created_at <= date_to
+        );
+      }
+
+      // Apply sorting
+      if (sort_by) {
+        interviews.sort((a, b) => {
+          let compareValue = 0;
+          
+          switch (sort_by) {
+            case 'date':
+              compareValue = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+              break;
+            case 'name':
+              compareValue = a.candidate_name.localeCompare(b.candidate_name);
+              break;
+            case 'status':
+              // For mock data, we don't have status field, so we'll use created_at as fallback
+              compareValue = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+              break;
+          }
+          
+          return sort_order === 'desc' ? -compareValue : compareValue;
+        });
+      }
+    }
+
+    const total = interviews.length;    // Apply pagination
+    let pagedInterviews = interviews;
+    if (params) {
+      const { limit, page } = params;
+      let offset = params.offset;
+      console.log('Pagination params:', { limit, offset, page });
+      if (typeof limit === 'number' && limit > 0) {
+        if (typeof page === 'number' && page > 0) {
+          offset = (page - 1) * limit;
+          console.log('Calculated offset:', offset);
+        }
+        if (typeof offset !== 'number' || offset < 0) offset = 0;
+        pagedInterviews = interviews.slice(offset, offset + limit);
+        console.log('Paginated interviews:', pagedInterviews.map(i => i.candidate_name));
+      }
+    }
+
+    console.log('Returning response:', {
+      interviewCount: pagedInterviews.length,
+      total,
+      firstInterview: pagedInterviews[0]?.candidate_name
+    });
+
     return {
-      interviews: mockInterviews,
-      total: mockInterviews.length
+      interviews: pagedInterviews,
+      total
     };
   },
 
@@ -211,7 +521,8 @@ export const mockApi = {
 
     return {
       message: userMessage,
-      ai_response: aiMessage
+      ai_response: aiMessage,
+      session_status: session.status
     };
   },
 
