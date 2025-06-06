@@ -19,29 +19,61 @@ import {
   Divider,
   Fab,
   useTheme,
-  alpha
+  alpha,
+  TextField,
+  InputAdornment,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Pagination
 } from '@mui/material';
 import { 
   Add as AddIcon, 
   PlayArrow as PlayIcon, 
   Assessment as AssessmentIcon,
-  AutoAwesome as AutoAwesomeIcon
+  AutoAwesome as AutoAwesomeIcon,
+  Search as SearchIcon
 } from '@mui/icons-material';
 import { interviewApi } from '../services/api';
 import type { Interview } from '../types';
 
 const Home: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const [interviews, setInterviews] = useState<Interview[]>([]);  const [loading, setLoading] = useState(true);
+  const [interviews, setInterviews] = useState<Interview[]>([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const theme = useTheme();
-
-  const loadInterviews = useCallback(async () => {
+  const [totalCount, setTotalCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(6);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState<'date' | 'name' | 'status'>('date');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const theme = useTheme();  const loadInterviews = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await interviewApi.getInterviews();
+      console.log('Loading interviews with params:', {
+        page: currentPage,
+        limit: pageSize,
+        candidate_name: searchTerm || undefined,
+        sort_by: sortBy,
+        sort_order: sortOrder
+      });
+      const response = await interviewApi.getInterviews({
+        page: currentPage,
+        limit: pageSize,
+        candidate_name: searchTerm || undefined,
+        sort_by: sortBy,
+        sort_order: sortOrder
+      });
+      console.log('Received response:', { 
+        interviewCount: response.interviews.length, 
+        total: response.total,
+        firstInterview: response.interviews[0]?.candidate_name 
+      });
       setInterviews(response.interviews);
+      setTotalCount(response.total);
     } catch (err) {
       console.error('Error loading interviews:', err);
       if (axios.isAxiosError(err)) {
@@ -56,11 +88,22 @@ const Home: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [t]);
-
-  useEffect(() => {
+  }, [t, currentPage, pageSize, searchTerm, sortBy, sortOrder]);  useEffect(() => {
     loadInterviews();
   }, [loadInterviews]);
+  
+  // Debug currentPage changes
+  useEffect(() => {
+    console.log('currentPage changed to:', currentPage);
+  }, [currentPage]);
+  // Debounced search effect - reset to page 1 when search/sort changes
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setCurrentPage(1);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm, sortBy, sortOrder]);
 
   if (loading) {
     return (
@@ -150,9 +193,7 @@ const Home: React.FC = () => {
             background: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
             opacity: 0.5
           }}
-        />      </Box>
-
-      <Container maxWidth="lg" sx={{ py: 4 }}>
+        />      </Box>      <Container maxWidth="lg" sx={{ py: 4 }}>
         {error && (
           <Alert 
             severity="error" 
@@ -166,7 +207,100 @@ const Home: React.FC = () => {
           >
             {error}
           </Alert>
-        )}        {/* Interview Cards Grid */}
+        )}
+
+        {/* Search and Filter Controls */}
+        <Paper 
+          elevation={0}
+          sx={{ 
+            p: 3, 
+            mb: 4, 
+            borderRadius: 3,
+            border: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
+            backgroundColor: alpha(theme.palette.grey[50], 0.3)
+          }}        >
+          <Box 
+            sx={{ 
+              display: 'grid', 
+              gridTemplateColumns: { xs: '1fr', md: '2fr 1fr 1fr' }, 
+              gap: 3, 
+              alignItems: 'center' 
+            }}
+          >
+            <Box>
+              <TextField
+                fullWidth
+                variant="outlined"
+                placeholder={t('pages:home.searchPlaceholder', { default: 'Search by candidate name...' })}
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1); // Reset to first page when searching
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon color="action" />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ 
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    backgroundColor: '#ffffff'
+                  }
+                }}
+              />
+            </Box>
+            <Box>
+              <FormControl fullWidth>
+                <InputLabel>{t('pages:home.sortBy', { default: 'Sort by' })}</InputLabel>
+                <Select
+                  value={sortBy}
+                  label={t('pages:home.sortBy', { default: 'Sort by' })}
+                  onChange={(e) => setSortBy(e.target.value as 'date' | 'name' | 'status')}
+                  sx={{ 
+                    borderRadius: 2,
+                    backgroundColor: '#ffffff'
+                  }}
+                >
+                  <MenuItem value="date">{t('pages:home.sortByDate', { default: 'Date' })}</MenuItem>
+                  <MenuItem value="name">{t('pages:home.sortByName', { default: 'Name' })}</MenuItem>
+                  <MenuItem value="status">{t('pages:home.sortByStatus', { default: 'Status' })}</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+            <Box>
+              <FormControl fullWidth>
+                <InputLabel>{t('pages:home.sortOrder', { default: 'Order' })}</InputLabel>
+                <Select
+                  value={sortOrder}
+                  label={t('pages:home.sortOrder', { default: 'Order' })}
+                  onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
+                  sx={{ 
+                    borderRadius: 2,
+                    backgroundColor: '#ffffff'
+                  }}
+                >
+                  <MenuItem value="desc">{t('pages:home.sortOrderDesc', { default: 'Newest first' })}</MenuItem>
+                  <MenuItem value="asc">{t('pages:home.sortOrderAsc', { default: 'Oldest first' })}</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+          </Box>
+          
+          {/* Results summary */}
+          <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>            <Typography variant="body2" color="text.secondary">
+              {t('pages:home.resultsSummary', { 
+                showing: interviews.length,
+                total: totalCount, 
+                page: currentPage, 
+                totalPages: Math.ceil(totalCount / pageSize),
+                default: `Showing ${interviews.length} of ${totalCount} interviews`
+              })}
+            </Typography>
+          </Box>
+        </Paper>{/* Interview Cards Grid */}
         <Box 
           sx={{ 
             display: 'grid', 
@@ -271,9 +405,7 @@ const Home: React.FC = () => {
               </CardActions>
             </Card>
           ))}
-        </Box>
-
-        {/* Empty State */}
+        </Box>        {/* Empty State */}
         {interviews.length === 0 && !loading && (
           <Paper 
             elevation={0}
@@ -285,27 +417,63 @@ const Home: React.FC = () => {
               border: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`
             }}
           >
-            <AutoAwesomeIcon sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />            <Typography variant="h5" gutterBottom fontWeight="600">
-              {t('pages:home.noInterviews')}
-            </Typography>            <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 400, mx: 'auto' }}>
-              {t('pages:home.noInterviews')}
+            <AutoAwesomeIcon sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />
+            <Typography variant="h5" gutterBottom fontWeight="600">
+              {searchTerm ? t('pages:home.noSearchResults') : t('pages:home.noInterviews')}
             </Typography>
-            <Button
-              component={Link}
-              to="/mock-interview"
-              variant="contained"
-              size="large"
-              startIcon={<AddIcon />}
-              sx={{
-                borderRadius: 6,
-                py: 2,
-                px: 4,
-                fontWeight: 600,
-                fontSize: '1.1rem'
-              }}            >
-              {t('pages:home.createNewInterview')}
-            </Button>
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 400, mx: 'auto' }}>
+              {searchTerm 
+                ? t('pages:home.noSearchResultsDesc', { term: searchTerm })
+                : t('pages:home.noInterviews')
+              }
+            </Typography>
+            {!searchTerm && (
+              <Button
+                component={Link}
+                to="/mock-interview"
+                variant="contained"
+                size="large"
+                startIcon={<AddIcon />}
+                sx={{
+                  borderRadius: 6,
+                  py: 2,
+                  px: 4,
+                  fontWeight: 600,
+                  fontSize: '1.1rem'
+                }}
+              >
+                {t('pages:home.createNewInterview')}
+              </Button>
+            )}
           </Paper>
+        )}
+
+        {/* Pagination */}
+        {totalCount > pageSize && (
+          <Box 
+            sx={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              mt: 4,
+              pb: 4 
+            }}
+          >            <Pagination 
+              count={Math.ceil(totalCount / pageSize)}
+              page={currentPage}
+              onChange={(_, page) => {
+                console.log('Pagination onChange called with page:', page);
+                setCurrentPage(page);
+              }}
+              color="primary"
+              size="large"
+              sx={{
+                '& .MuiPaginationItem-root': {
+                  borderRadius: 2,
+                  fontWeight: 500
+                }
+              }}
+            />
+          </Box>
         )}
       </Container>      {/* Floating Action Button */}
       <Fab

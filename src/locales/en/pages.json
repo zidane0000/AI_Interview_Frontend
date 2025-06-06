@@ -2,10 +2,20 @@
   "home": {
     "title": "AI Mock Interview Practice",
     "subtitle": "Practice makes perfect - simulate real interview scenarios with AI",
-    "createNewInterview": "Create New Interview",    "recentInterviews": "Recent Interviews",
+    "createNewInterview": "Create New Interview",
+    "recentInterviews": "Recent Interviews",
     "noInterviews": "No interviews yet. Create your first mock interview to get started!",
     "questionsCount": "{{count}} Questions",
     "questionsPreview": "Questions Preview:",
+    "searchPlaceholder": "Search by candidate name...",
+    "sortBy": "Sort by",
+    "sortByDate": "Date",
+    "sortByName": "Name",
+    "sortByStatus": "Status",
+    "sortOrder": "Order",
+    "sortOrderDesc": "Newest first",
+    "sortOrderAsc": "Oldest first",
+    "resultsSummary": "Showing {{showing}} of {{total}} interviews (Page {{page}} of {{totalPages}})",
     "featuresTitle": "Why Choose Our Platform?",
     "features": {
       "ai": {
@@ -21,7 +31,8 @@
         "description": "Track your progress with comprehensive performance analytics"
       }
     }
-  },  "mockInterview": {
+  },
+  "mockInterview": {
     "title": "Create Mock Interview",
     "subtitle": "Set up candidate information and interview questions for a tailored AI interview experience",
     "candidateInfo": "Candidate Information",
@@ -54,7 +65,8 @@
     "createInterview": "Create Interview",
     "creating": "Creating...",
     "fillCandidateName": "Please fill in candidate name to start practice (questions are optional, AI will automatically supplement)"
-  },  "interviewDetail": {
+  },
+  "interviewDetail": {
     "title": "Interview Details",
     "candidate": "Candidate Information",
     "type": "Type",
@@ -79,7 +91,8 @@
       "Submit when all questions are answered",
       "AI evaluation will be provided after submission"
     ]
-  },"takeInterview": {
+  },
+  "takeInterview": {
     "title": "Interview Session",
     "interviewTitle": "Interview: {{candidate}}",
     "completed": "Interview Completed",
@@ -97,7 +110,8 @@
     "nextQuestion": "Next Question",
     "finishInterview": "Finish Interview",
     "confirmFinish": "Are you sure you want to finish the interview? You won't be able to modify your answers afterwards."
-  },  "evaluationResult": {
+  },
+  "evaluationResult": {
     "title": "Interview Evaluation Results",
     "completedOn": "Completed on",
     "overallPerformance": "Overall Performance",
@@ -136,7 +150,8 @@
       "fair": "Fair",
       "needsImprovement": "Needs Improvement"
     }
-  },"changelog": {
+  },
+  "changelog": {
     "title": "Changelog",
     "subtitle": "Stay up to date with all the latest features, improvements and fixes.",
     "backToHome": "Back to Home",
