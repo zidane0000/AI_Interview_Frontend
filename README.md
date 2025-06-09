@@ -188,8 +188,7 @@ src/
 │   └── I18nTestPage.tsx        # Internationalization test page
 ├── services/        # API service layer
 │   ├── api.ts                  # Main API configuration and routing
-│   ├── mockApi.ts              # Complete mock API implementation
-│   └── api.ts.backup           # API backup file
+│   └── mockApi.ts              # Complete mock API implementation
 ├── types/           # TypeScript type definitions
 │   └── index.ts                # Unified type interface definitions
 ├── i18n/            # Internationalization configuration
@@ -364,8 +363,9 @@ This system supports two API modes and can seamlessly switch through environment
 
 ## 📚 Related Documentation
 
-- [Multi-language Implementation Guide](./L10N_IMPLEMENTATION_GUIDE.md)
-- [Mock Mode Implementation Description](./MOCK_MODE_IMPLEMENTATION.md)
+- [Multi-language Implementation Guide](./docs/development/L10N_IMPLEMENTATION_GUIDE.md)
+- [Mock Mode Implementation Description](./docs/development/MOCK_MODE_IMPLEMENTATION.md)
+- [Development TODOs](./docs/development/development-todos.md)
 
 ---
 
