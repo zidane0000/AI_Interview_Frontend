@@ -9,6 +9,7 @@ import type {
   SendMessageRequest,
   SendMessageResponse,
 } from '../types';
+import { logger } from '../utils/logger';
 
 // Mock data
 const mockInterviews: Interview[] = [
@@ -336,7 +337,7 @@ export const mockApi = {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
     
-    console.log('Mock API getInterviews called with params:', params);
+    logger.apiDebug('getInterviews', 'GET', params);
 
     let interviews = [...mockInterviews];
 
@@ -398,19 +399,17 @@ export const mockApi = {
     if (params) {
       const { limit, page } = params;
       let offset = params.offset;
-      console.log('Pagination params:', { limit, offset, page });
+      logger.componentDebug('mockApi', 'pagination', { limit, offset, page });
       if (typeof limit === 'number' && limit > 0) {
         if (typeof page === 'number' && page > 0) {
           offset = (page - 1) * limit;
-          console.log('Calculated offset:', offset);
+          logger.componentDebug('mockApi', 'calculated offset', offset);
         }
         if (typeof offset !== 'number' || offset < 0) offset = 0;
         pagedInterviews = interviews.slice(offset, offset + limit);
-        console.log('Paginated interviews:', pagedInterviews.map(i => i.candidate_name));
+        logger.componentDebug('mockApi', 'paginated interviews', pagedInterviews.map(i => i.candidate_name));
       }
-    }
-
-    console.log('Returning response:', {
+    }    logger.componentDebug('mockApi', 'returning response', {
       interviewCount: pagedInterviews.length,
       total,
       firstInterview: pagedInterviews[0]?.candidate_name

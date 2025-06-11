@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '../utils/dateFormat';
+import { logger } from '../utils/logger';
 import axios from 'axios';
 import {
   Box,
@@ -52,7 +53,7 @@ const Home: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      console.log('Loading interviews with params:', {
+      logger.apiDebug('getInterviews', 'GET', {
         page: currentPage,
         limit: pageSize,
         candidate_name: searchTerm || undefined,
@@ -66,7 +67,7 @@ const Home: React.FC = () => {
         sort_by: sortBy,
         sort_order: sortOrder
       });
-      console.log('Received response:', { 
+      logger.componentDebug('Home', 'received response', { 
         interviewCount: response.interviews.length, 
         total: response.total,
         firstInterview: response.interviews[0]?.candidate_name 
@@ -74,7 +75,11 @@ const Home: React.FC = () => {
       setInterviews(response.interviews);
       setTotalCount(response.total);
     } catch (err) {
-      console.error('Error loading interviews:', err);
+      logger.error('Error loading interviews', {
+        component: 'Home',
+        action: 'loadInterviews',
+        data: err
+      });
       if (axios.isAxiosError(err)) {
         if (err.code === 'ERR_NETWORK' || !err.response) {
           setError(t('common:errors.networkError'));
@@ -90,10 +95,9 @@ const Home: React.FC = () => {
   }, [t, currentPage, pageSize, searchTerm, sortBy, sortOrder]);  useEffect(() => {
     loadInterviews();
   }, [loadInterviews]);
-  
-  // Debug currentPage changes
+    // Debug currentPage changes
   useEffect(() => {
-    console.log('currentPage changed to:', currentPage);
+    logger.componentDebug('Home', 'currentPage changed', currentPage);
   }, [currentPage]);
   // Debounced search effect - reset to page 1 when search/sort changes
   useEffect(() => {
@@ -449,7 +453,7 @@ const Home: React.FC = () => {
               count={Math.ceil(totalCount / pageSize)}
               page={currentPage}
               onChange={(_, page) => {
-                console.log('Pagination onChange called with page:', page);
+                logger.componentDebug('Home', 'pagination onChange', page);
                 setCurrentPage(page);
               }}
               color="primary"

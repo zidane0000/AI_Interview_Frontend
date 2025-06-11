@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '../utils/dateFormat';
+import { logger } from '../utils/logger';
 import {
   Typography,
   Button,
@@ -43,10 +44,13 @@ const InterviewDetail: React.FC = () => {
     try {
       setLoading(true);
       const data = await interviewApi.getInterview(interviewId);
-      setInterview(data);
-    } catch (err) {
+      setInterview(data);    } catch (err) {
       setError(t('common:errors.loadInterview'));
-      console.error('Error loading interview:', err);
+      logger.error('Error loading interview', {
+        component: 'InterviewDetail',
+        action: 'loadInterview',
+        data: err
+      });
     } finally {
       setLoading(false);
     }

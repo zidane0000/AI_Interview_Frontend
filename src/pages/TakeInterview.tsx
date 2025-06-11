@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { logger } from '../utils/logger';
 import {
   Typography,
   TextField,
@@ -69,10 +70,13 @@ const TakeInterview: React.FC = () => {
       
       // Start chat session
       const session = await interviewApi.startChatSession(interviewId);
-      setChatSession(session);
-    } catch (err) {
+      setChatSession(session);    } catch (err) {
       setError('Failed to start interview session');
-      console.error('Error initializing interview:', err);
+      logger.error('Error initializing interview', {
+        component: 'TakeInterview',
+        action: 'initializeInterview',
+        data: err
+      });
     } finally {
       setLoading(false);
     }
@@ -119,11 +123,13 @@ const TakeInterview: React.FC = () => {
           ...prev,
           status: response.session_status === 'completed' ? 'completed' : prev.status
         } : null);
-      }
-
-    } catch (err) {
+      }    } catch (err) {
       setError('Failed to send message. Please try again.');
-      console.error('Error sending message:', err);
+      logger.error('Error sending message', {
+        component: 'TakeInterview',
+        action: 'handleSendMessage',
+        data: err
+      });
       // 如果發生錯誤，恢復輸入內容
       setCurrentMessage(messageToSend);
     } finally {
@@ -137,10 +143,13 @@ const TakeInterview: React.FC = () => {
     try {
       setLoading(true);
       const evaluation = await interviewApi.endChatSession(chatSession.id);
-      navigate(`/evaluation/${evaluation.id}`);
-    } catch (err) {
+      navigate(`/evaluation/${evaluation.id}`);    } catch (err) {
       setError('Failed to end interview. Please try again.');
-      console.error('Error ending interview:', err);
+      logger.error('Error ending interview', {
+        component: 'TakeInterview',
+        action: 'handleEndInterview',
+        data: err
+      });
       setLoading(false);
     }
   };

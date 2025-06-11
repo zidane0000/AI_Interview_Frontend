@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { logger } from '../utils/logger';
 import {
   Paper,
   Typography,
@@ -75,10 +76,13 @@ const CreateInterview: React.FC = () => {
         questions,
       });
 
-      navigate(`/interview/${interview.id}`);
-    } catch (err) {
+      navigate(`/interview/${interview.id}`);    } catch (err) {
       setError('Failed to create interview. Please try again.');
-      console.error('Error creating interview:', err);
+      logger.error('Error creating interview', {
+        component: 'CreateInterview',
+        action: 'handleSubmit',
+        data: err
+      });
     } finally {
       setLoading(false);
     }

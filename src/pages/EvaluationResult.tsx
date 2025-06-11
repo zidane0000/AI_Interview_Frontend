@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '../utils/dateFormat';
+import { logger } from '../utils/logger';
 import {
   Typography,
   Button,
@@ -54,10 +55,13 @@ const EvaluationResult: React.FC = () => {
       
       // Load interview details to get candidate name
       const interviewData = await interviewApi.getInterview(evaluationData.interview_id);
-      setInterview(interviewData);
-    } catch (err) {
+      setInterview(interviewData);    } catch (err) {
       setError(t('pages:evaluationResult.failedToLoad'));
-      console.error('Error loading evaluation:', err);
+      logger.error('Error loading evaluation', {
+        component: 'EvaluationResult',
+        action: 'loadEvaluation',
+        data: err
+      });
     } finally {
       setLoading(false);
     }

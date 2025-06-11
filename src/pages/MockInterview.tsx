@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { logger } from '../utils/logger';
 import {
   Box,
   Typography,
@@ -138,12 +139,14 @@ const MockInterview: React.FC = () => {
       const interview = await interviewApi.createInterview({
         candidate_name: candidateName.trim(),
         questions: finalQuestions,
-      });
-
-      navigate(`/interview/${interview.id}`);
+      });      navigate(`/interview/${interview.id}`);
     } catch (err) {
       setError('Failed to create interview. Please try again.');
-      console.error('Error creating interview:', err);
+      logger.error('Error creating interview', {
+        component: 'MockInterview',
+        action: 'handleSubmit',
+        data: err
+      });
     } finally {
       setLoading(false);
     }

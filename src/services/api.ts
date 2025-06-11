@@ -10,6 +10,7 @@ import type {
   SendMessageResponse,
 } from '../types';
 import { mockApi } from './mockApi';
+import { logger } from '../utils/logger';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true';
@@ -23,10 +24,9 @@ const api = axios.create({
 });
 
 // Request interceptor
-api.interceptors.request.use(
-  (config) => {
+api.interceptors.request.use(  (config) => {
     // Add any auth headers or other request modifications here
-    console.log(`Making ${config.method?.toUpperCase()} request to: ${config.url}`);
+    logger.apiDebug(config.url || 'unknown', config.method?.toUpperCase() || 'UNKNOWN');
     return config;
   },
   (error) => {
@@ -38,9 +38,11 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => {
     return response;
-  },
-  (error) => {
-    console.error('API Error:', error.response?.data || error.message);
+  },  (error) => {
+    logger.error('API Error', {
+      component: 'API',
+      data: error.response?.data || error.message
+    });
     return Promise.reject(error);
   }
 );
