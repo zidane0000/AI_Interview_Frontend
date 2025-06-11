@@ -10,7 +10,6 @@ import {
   Card,
   CardContent,
   CardActions,
-  Chip,
   CircularProgress,
   Alert,
   Container,
@@ -348,18 +347,7 @@ const Home: React.FC = () => {
                     </Typography>
                   </Box>
                 </Box>
-                
-                <Divider sx={{ my: 2 }} />
-                
-                <Box display="flex" alignItems="center" mb={2}>                  <Chip 
-                    label={t('pages:home.questionsCount', { count: interview.questions.length })}
-                    size="small"
-                    color="primary"
-                    variant="outlined"
-                    icon={<AssessmentIcon />}
-                    sx={{ borderRadius: 2 }}
-                  />
-                </Box>
+                  <Divider sx={{ my: 2 }} />
                   <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                   {t('pages:home.questionsPreview')}
                 </Typography>

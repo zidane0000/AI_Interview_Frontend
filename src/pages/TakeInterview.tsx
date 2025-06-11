@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
-  Paper,
   Typography,
   TextField,
   Button,
@@ -13,12 +12,20 @@ import {
   Card,
   CardContent,
   Avatar,
+  Container,
+  useTheme,
+  alpha,
+  Stack,
+  Chip,
 } from '@mui/material';
 import {
   ArrowBack as ArrowBackIcon,
   Send as SendIcon,
   SmartToy as AIIcon,
   Person as PersonIcon,
+  Assessment as AssessmentIcon,
+  Schedule as ScheduleIcon,
+  Psychology as BrainIcon,
 } from '@mui/icons-material';
 import { interviewApi } from '../services/api';
 import type { Interview, ChatInterviewSession } from '../types';
@@ -27,6 +34,7 @@ const TakeInterview: React.FC = () => {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const theme = useTheme();
   const [interview, setInterview] = useState<Interview | null>(null);
   const [chatSession, setChatSession] = useState<ChatInterviewSession | null>(null);
   const [currentMessage, setCurrentMessage] = useState('');
@@ -142,194 +150,468 @@ const TakeInterview: React.FC = () => {
       event.preventDefault();
       handleSendMessage();
     }
-  };
-  if (loading) {
+  };  if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
-        <CircularProgress />        <Typography variant="body1" sx={{ ml: 2 }}>
-          {interview ? t('pages:takeInterview.startingSession') : t('pages:takeInterview.loadingInterview')}
-        </Typography>
+      <Box 
+        display="flex" 
+        justifyContent="center" 
+        alignItems="center" 
+        minHeight="100vh"
+        sx={{
+          background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)} 0%, ${alpha(theme.palette.secondary.main, 0.05)} 100%)`
+        }}
+      >
+        <Container maxWidth="sm">
+          <Card 
+            elevation={0}
+            sx={{ 
+              textAlign: 'center',
+              p: 6,
+              borderRadius: 4,
+              backgroundColor: 'rgba(255,255,255,0.95)',
+              backdropFilter: 'blur(10px)',
+              boxShadow: `0 20px 60px ${alpha('#000000', 0.1)}`
+            }}
+          >
+            <CircularProgress size={60} thickness={4} sx={{ mb: 3 }} />
+            <Typography variant="h6" sx={{ mb: 2, color: 'text.primary', fontWeight: 600 }}>
+              {interview ? t('pages:takeInterview.startingSession') : t('pages:takeInterview.loadingInterview')}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Please wait while we prepare your interview session...
+            </Typography>
+          </Card>
+        </Container>
       </Box>
     );
   }
-
   if (error || !interview || !chatSession) {
     return (
-      <Box>
-        <Box display="flex" alignItems="center" mb={4}>
-          <IconButton onClick={() => navigate('/')} sx={{ mr: 2 }}>
-            <ArrowBackIcon />
-          </IconButton>          <Typography variant="h4" component="h1">
-            {t('pages:takeInterview.title')}
-          </Typography>
+      <Box sx={{ minHeight: '100vh' }}>
+        {/* Header with gradient background */}
+        <Box
+          sx={{
+            background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+            color: '#ffffff',
+            py: 4,
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <Container maxWidth="lg">
+            <Box display="flex" alignItems="center">
+              <IconButton 
+                onClick={() => navigate('/')} 
+                sx={{ 
+                  mr: 2, 
+                  color: '#ffffff',
+                  '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)' }
+                }}
+              >
+                <ArrowBackIcon />
+              </IconButton>
+              <Typography variant="h4" component="h1" fontWeight="bold">
+                {t('pages:takeInterview.title')}
+              </Typography>
+            </Box>
+          </Container>
         </Box>
-        <Alert severity="error">
-          {error || t('pages:takeInterview.sessionError')}
-        </Alert>
+        
+        <Container maxWidth="lg" sx={{ py: 4 }}>
+          <Alert 
+            severity="error" 
+            sx={{ 
+              borderRadius: 3,
+              boxShadow: `0 4px 20px ${alpha(theme.palette.error.main, 0.2)}`
+            }}
+          >
+            {error || t('pages:takeInterview.sessionError')}
+          </Alert>
+        </Container>
       </Box>
     );
   }
 
   const isSessionCompleted = chatSession.status === 'completed';
-
   return (
-    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Header */}
-      <Paper elevation={1} sx={{ p: 2, borderRadius: 0 }}>
-        <Box display="flex" alignItems="center" justifyContent="space-between">
-          <Box display="flex" alignItems="center">
-            <IconButton onClick={() => navigate(`/interview/${interview.id}`)} sx={{ mr: 2 }}>
-              <ArrowBackIcon />
-            </IconButton>            <Box>
-              <Typography variant="h5" component="h1">
-                {t('pages:takeInterview.interviewTitle', { candidate: interview.candidate_name })}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {isSessionCompleted ? t('pages:takeInterview.completed') : t('pages:takeInterview.inProgress')}
-              </Typography>
+    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'background.default' }}>
+      {/* Modern Header with Interview Info */}
+      <Box
+        sx={{
+          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+          color: '#ffffff',
+          py: 3,
+          position: 'relative',
+          overflow: 'hidden',
+          flexShrink: 0,
+          boxShadow: `0 4px 20px ${alpha('#000000', 0.15)}`
+        }}
+      >
+        <Container maxWidth="lg">
+          <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Box display="flex" alignItems="center">
+              <IconButton 
+                onClick={() => navigate(`/interview/${interview.id}`)} 
+                sx={{ 
+                  mr: 2, 
+                  color: '#ffffff',
+                  '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)' }
+                }}
+              >
+                <ArrowBackIcon />
+              </IconButton>
+              <Box>
+                <Typography variant="h5" component="h1" fontWeight="700" sx={{ mb: 0.5 }}>
+                  {t('pages:takeInterview.interviewTitle', { candidate: interview.candidate_name })}
+                </Typography>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <Chip
+                    icon={isSessionCompleted ? <AssessmentIcon /> : <BrainIcon />}
+                    label={isSessionCompleted ? t('pages:takeInterview.completed') : t('pages:takeInterview.inProgress')}
+                    color={isSessionCompleted ? "success" : "info"}
+                    variant="outlined"
+                    sx={{ 
+                      backgroundColor: 'rgba(255,255,255,0.15)',
+                      color: '#ffffff',
+                      borderColor: 'rgba(255,255,255,0.3)',
+                      fontWeight: 600,
+                      '& .MuiChip-icon': { color: '#ffffff' }
+                    }}
+                  />
+                  <Chip
+                    icon={<ScheduleIcon />}
+                    label={new Date().toLocaleTimeString()}
+                    variant="outlined"
+                    sx={{ 
+                      backgroundColor: 'rgba(255,255,255,0.1)',
+                      color: '#ffffff',
+                      borderColor: 'rgba(255,255,255,0.2)',
+                      fontSize: '0.75rem',
+                      '& .MuiChip-icon': { color: '#ffffff' }
+                    }}
+                  />
+                </Stack>
+              </Box>
             </Box>
+            
+            {isSessionCompleted && (
+              <Button
+                variant="contained"
+                size="large"
+                onClick={handleEndInterview}
+                disabled={loading}
+                sx={{
+                  borderRadius: 4,
+                  px: 4,
+                  py: 1.5,
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  backgroundColor: 'rgba(255,255,255,0.2)',
+                  backdropFilter: 'blur(10px)',
+                  color: '#ffffff',
+                  border: '1px solid rgba(255,255,255,0.3)',
+                  boxShadow: `0 8px 32px ${alpha('#000000', 0.2)}`,
+                  '&:hover': {
+                    backgroundColor: 'rgba(255,255,255,0.3)',
+                    transform: 'translateY(-1px)',
+                    boxShadow: `0 12px 40px ${alpha('#000000', 0.3)}`
+                  },
+                  '&:disabled': {
+                    backgroundColor: 'rgba(255,255,255,0.1)',
+                    color: 'rgba(255,255,255,0.7)'
+                  },
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                {loading ? t('pages:takeInterview.processing') : t('pages:takeInterview.viewResults')}
+              </Button>
+            )}
           </Box>
-          
-          {isSessionCompleted && (
-            <Button
-              variant="contained"
-              color="success"              onClick={handleEndInterview}
-              disabled={loading}
-            >
-              {loading ? t('pages:takeInterview.processing') : t('pages:takeInterview.viewResults')}
-            </Button>
-          )}
-        </Box>
-      </Paper>
+        </Container>
+      </Box>
 
-      {/* Chat Messages */}
+      {/* Chat Messages Area */}
       <Box 
         sx={{ 
           flexGrow: 1, 
           overflow: 'auto', 
-          p: 2,
-          backgroundColor: 'grey.50'
+          background: `linear-gradient(180deg, ${alpha(theme.palette.grey[50], 0.5)} 0%, ${alpha(theme.palette.grey[100], 0.3)} 100%)`,
+          position: 'relative'
         }}
       >
-        {chatSession.messages.map((message) => (
-          <Box
-            key={message.id}
-            sx={{
-              display: 'flex',
-              justifyContent: message.type === 'user' ? 'flex-end' : 'flex-start',
-              mb: 2
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                maxWidth: '70%',
-                flexDirection: message.type === 'user' ? 'row-reverse' : 'row'
-              }}
-            >
-              <Avatar
+        <Container maxWidth="lg" sx={{ py: 3, height: '100%' }}>
+          <Box sx={{ maxWidth: '800px', mx: 'auto' }}>
+            {chatSession.messages.map((message) => (
+              <Box
+                key={message.id}
                 sx={{
-                  bgcolor: message.type === 'user' ? 'primary.main' : 'secondary.main',
-                  mx: 1,
-                  width: 32,
-                  height: 32
+                  display: 'flex',
+                  justifyContent: message.type === 'user' ? 'flex-end' : 'flex-start',
+                  mb: 3
                 }}
               >
-                {message.type === 'user' ? <PersonIcon /> : <AIIcon />}
-              </Avatar>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    maxWidth: '75%',
+                    flexDirection: message.type === 'user' ? 'row-reverse' : 'row'
+                  }}
+                >
+                  <Avatar
+                    sx={{
+                      bgcolor: message.type === 'user' 
+                        ? `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`
+                        : `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.secondary.dark} 100%)`,
+                      mx: 2,
+                      width: 40,
+                      height: 40,
+                      boxShadow: `0 4px 12px ${alpha(message.type === 'user' ? theme.palette.primary.main : theme.palette.secondary.main, 0.3)}`
+                    }}
+                  >
+                    {message.type === 'user' ? <PersonIcon /> : <AIIcon />}
+                  </Avatar>
+                  
+                  <Card
+                    elevation={0}
+                    sx={{
+                      background: message.type === 'user' 
+                        ? `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`
+                        : '#ffffff',
+                      color: message.type === 'user' ? '#ffffff' : 'text.primary',
+                      borderRadius: 4,
+                      border: message.type === 'user' 
+                        ? 'none' 
+                        : `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
+                      boxShadow: `0 4px 20px ${alpha(message.type === 'user' ? theme.palette.primary.main : '#000000', 0.1)}`,
+                      position: 'relative',
+                      '&::before': message.type === 'user' ? {
+                        content: '""',
+                        position: 'absolute',
+                        top: 16,
+                        right: -8,
+                        width: 0,
+                        height: 0,
+                        borderLeft: `8px solid ${theme.palette.primary.main}`,
+                        borderTop: '8px solid transparent',
+                        borderBottom: '8px solid transparent'
+                      } : {
+                        content: '""',
+                        position: 'absolute',
+                        top: 16,
+                        left: -8,
+                        width: 0,
+                        height: 0,
+                        borderRight: '8px solid #ffffff',
+                        borderTop: '8px solid transparent',
+                        borderBottom: '8px solid transparent'
+                      }
+                    }}
+                  >
+                    <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>
+                      <Typography 
+                        variant="body1" 
+                        sx={{ 
+                          whiteSpace: 'pre-wrap',
+                          lineHeight: 1.6,
+                          fontSize: '1rem'
+                        }}
+                      >
+                        {message.content}
+                      </Typography>
+                      <Typography 
+                        variant="caption" 
+                        sx={{ 
+                          opacity: 0.8, 
+                          mt: 1.5, 
+                          display: 'block',
+                          fontSize: '0.75rem',
+                          fontWeight: 500
+                        }}
+                      >
+                        {new Date(message.timestamp).toLocaleTimeString()}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Box>
+              </Box>
+            ))}
+            
+            {sending && (
+              <Box sx={{ display: 'flex', justifyContent: 'flex-start', mb: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Avatar 
+                    sx={{ 
+                      background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.secondary.dark} 100%)`,
+                      mx: 2, 
+                      width: 40, 
+                      height: 40,
+                      boxShadow: `0 4px 12px ${alpha(theme.palette.secondary.main, 0.3)}`
+                    }}
+                  >
+                    <AIIcon />
+                  </Avatar>
+                  <Card 
+                    elevation={0}
+                    sx={{ 
+                      background: '#ffffff',
+                      p: 3,
+                      borderRadius: 4,
+                      border: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
+                      boxShadow: `0 4px 20px ${alpha('#000000', 0.08)}`,
+                      position: 'relative',
+                      '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 16,
+                        left: -8,
+                        width: 0,
+                        height: 0,
+                        borderRight: '8px solid #ffffff',
+                        borderTop: '8px solid transparent',
+                        borderBottom: '8px solid transparent'
+                      }
+                    }}
+                  >
+                    <Box display="flex" alignItems="center" gap={2}>
+                      <Typography variant="body2" color="text.secondary" fontWeight={500}>
+                        {t('pages:takeInterview.aiTyping')}
+                      </Typography>
+                      <CircularProgress size={16} thickness={4} />
+                    </Box>
+                  </Card>
+                </Box>
+              </Box>
+            )}
+            
+            <div ref={messagesEndRef} />
+          </Box>
+        </Container>
+      </Box>
+
+      {/* Modern Message Input Area */}
+      {!isSessionCompleted && (
+        <Box
+          sx={{
+            backgroundColor: '#ffffff',
+            borderTop: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
+            boxShadow: `0 -4px 20px ${alpha('#000000', 0.08)}`,
+            flexShrink: 0
+          }}
+        >
+          <Container maxWidth="lg" sx={{ py: 3 }}>
+            <Box sx={{ maxWidth: '800px', mx: 'auto' }}>
+              {error && (
+                <Alert 
+                  severity="error" 
+                  sx={{ 
+                    mb: 3,
+                    borderRadius: 3,
+                    boxShadow: `0 4px 20px ${alpha(theme.palette.error.main, 0.15)}`
+                  }}
+                >
+                  {error}
+                </Alert>
+              )}
               
-              <Card
-                sx={{
-                  bgcolor: message.type === 'user' ? 'primary.main' : 'white',
-                  color: message.type === 'user' ? 'white' : 'text.primary',
-                  borderRadius: 2,
-                  boxShadow: 1
-                }}
-              >
-                <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
-                  <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
-                    {message.content}
-                  </Typography>
+              <Stack spacing={2}>
+                <Box display="flex" gap={2} alignItems="flex-end">
+                  <TextField
+                    fullWidth
+                    multiline
+                    maxRows={4}
+                    placeholder={t('pages:takeInterview.responsePlaceholder')}
+                    value={currentMessage}
+                    onChange={(e) => setCurrentMessage(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    disabled={sending}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        borderRadius: 4,
+                        backgroundColor: alpha(theme.palette.grey[50], 0.5),
+                        '&:hover': {
+                          backgroundColor: alpha(theme.palette.grey[100], 0.8),
+                        },
+                        '&.Mui-focused': {
+                          backgroundColor: '#ffffff',
+                          boxShadow: `0 0 0 2px ${alpha(theme.palette.primary.main, 0.2)}`
+                        }
+                      }
+                    }}
+                  />
+                  <Button
+                    variant="contained"
+                    size="large"
+                    endIcon={<SendIcon />}
+                    onClick={handleSendMessage}
+                    disabled={!currentMessage.trim() || sending}
+                    sx={{
+                      minWidth: '120px',
+                      borderRadius: 4,
+                      height: '56px',
+                      flexShrink: 0,
+                      background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                      fontWeight: 600,
+                      fontSize: '1rem',
+                      boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
+                      '&:hover': {
+                        background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
+                        transform: 'translateY(-1px)',
+                        boxShadow: `0 8px 30px ${alpha(theme.palette.primary.main, 0.4)}`
+                      },
+                      '&:disabled': {
+                        background: alpha(theme.palette.grey[400], 0.5),
+                        color: alpha(theme.palette.text.primary, 0.5)
+                      },
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    {sending ? 'Sending...' : 'Send'}
+                  </Button>
+                </Box>
+                
+                <Box display="flex" justifyContent="space-between" alignItems="center">
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    size="medium"
+                    onClick={handleEndInterview}
+                    disabled={loading}
+                    sx={{ 
+                      borderRadius: 3,
+                      textTransform: 'none',
+                      fontWeight: 600,
+                      px: 3,
+                      py: 1,
+                      borderColor: alpha(theme.palette.error.main, 0.5),
+                      backgroundColor: alpha(theme.palette.error.main, 0.05),
+                      '&:hover': {
+                        backgroundColor: alpha(theme.palette.error.main, 0.1),
+                        borderColor: theme.palette.error.main,
+                        transform: 'translateY(-1px)',
+                        boxShadow: `0 4px 20px ${alpha(theme.palette.error.main, 0.2)}`
+                      },
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    {loading ? t('pages:takeInterview.processing') : t('pages:takeInterview.evaluate')}
+                  </Button>
+                  
                   <Typography 
                     variant="caption" 
+                    color="text.secondary"
                     sx={{ 
-                      opacity: 0.7, 
-                      mt: 1, 
-                      display: 'block',
+                      fontStyle: 'italic',
                       fontSize: '0.75rem'
                     }}
                   >
-                    {new Date(message.timestamp).toLocaleTimeString()}
+                    Press Enter to send, Shift+Enter for new line
                   </Typography>
-                </CardContent>
-              </Card>
+                </Box>
+              </Stack>
             </Box>
-          </Box>
-        ))}
-        
-        {sending && (
-          <Box sx={{ display: 'flex', justifyContent: 'flex-start', mb: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Avatar sx={{ bgcolor: 'secondary.main', mx: 1, width: 32, height: 32 }}>
-                <AIIcon />
-              </Avatar>
-              <Card sx={{ bgcolor: 'white', p: 2 }}>                <Typography variant="body2" color="text.secondary">
-                  {t('pages:takeInterview.aiTyping')}
-                </Typography>
-                <CircularProgress size={16} sx={{ ml: 1 }} />
-              </Card>
-            </Box>
-          </Box>
-        )}
-        
-        <div ref={messagesEndRef} />
-      </Box>
-
-      {/* Message Input */}
-      {!isSessionCompleted && (
-        <Paper elevation={3} sx={{ p: 2, borderRadius: 0 }}>
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
-            </Alert>
-          )}
-          
-          <Box display="flex" gap={1}>            <TextField
-              fullWidth
-              multiline
-              maxRows={4}
-              placeholder={t('pages:takeInterview.responsePlaceholder')}
-              value={currentMessage}
-              onChange={(e) => setCurrentMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-              disabled={sending}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: 3
-                }
-              }}
-            />
-            <Button
-              variant="contained"
-              endIcon={<SendIcon />}
-              onClick={handleSendMessage}
-              disabled={!currentMessage.trim() || sending}
-              sx={{
-                minWidth: '100px',
-                borderRadius: 3,
-                height: 'fit-content',
-                alignSelf: 'flex-end'
-              }}
-            >
-              {sending ? 'Sending...' : 'Send'}
-            </Button>
-          </Box>
-          
-          <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-            Press Enter to send, Shift+Enter for new line
-          </Typography>
-        </Paper>
+          </Container>
+        </Box>
       )}
     </Box>
   );

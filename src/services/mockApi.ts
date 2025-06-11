@@ -557,7 +557,7 @@ export const mockApi = {
       id: `eval_${Date.now()}`,
       interview_id: session.interview_id,
       answers,
-      score: Math.floor(Math.random() * 30) + 70, // Random score between 70-100
+      score: (Math.floor(Math.random() * 30) + 70) / 100, // Random score between 0.70-1.00
       feedback: 'Excellent conversation! You provided thoughtful and detailed responses throughout our discussion. Your communication skills are strong, and you demonstrated good self-awareness and professional experience.',
       created_at: new Date().toISOString()
     };
