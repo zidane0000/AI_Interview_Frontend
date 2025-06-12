@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { logger } from '../utils/logger';
 import {
@@ -27,6 +27,7 @@ import {
   Assessment as AssessmentIcon,
   Schedule as ScheduleIcon,
   Psychology as BrainIcon,
+  Language as LanguageIcon,
 } from '@mui/icons-material';
 import { interviewApi } from '../services/api';
 import type { Interview, ChatInterviewSession } from '../types';
@@ -34,6 +35,7 @@ import type { Interview, ChatInterviewSession } from '../types';
 const TakeInterview: React.FC = () => {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const theme = useTheme();
   const [interview, setInterview] = useState<Interview | null>(null);
@@ -42,14 +44,19 @@ const TakeInterview: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [interviewLanguage, setInterviewLanguage] = useState<'en' | 'zh-TW'>('en');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const initializingRef = useRef(false);
-  useEffect(() => {
+  const initializingRef = useRef(false);  useEffect(() => {
     if (id && !initializingRef.current) {
       initializingRef.current = true;
-      initializeInterview(id);
+      // Extract language from URL parameters
+      const langParam = searchParams.get('lang') as 'en' | 'zh-TW' | null;
+      if (langParam && (langParam === 'en' || langParam === 'zh-TW')) {
+        setInterviewLanguage(langParam);
+      }
+      initializeInterview(id, langParam || 'en');
     }
-  }, [id]);
+  }, [id, searchParams]);
 
   useEffect(() => {
     scrollToBottom();
@@ -58,8 +65,7 @@ const TakeInterview: React.FC = () => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  const initializeInterview = async (interviewId: string) => {
+  const initializeInterview = async (interviewId: string, language: 'en' | 'zh-TW' = 'en') => {
     try {
       setLoading(true);
       setError(null);
@@ -67,10 +73,9 @@ const TakeInterview: React.FC = () => {
       // Load interview details
       const interviewData = await interviewApi.getInterview(interviewId);
       setInterview(interviewData);
-      
-      // Start chat session
-      const session = await interviewApi.startChatSession(interviewId);
-      setChatSession(session);    } catch (err) {
+        // Start chat session with language parameter
+      const session = await interviewApi.startChatSession(interviewId, { interview_language: language });
+      setChatSession(session);} catch (err) {
       setError('Failed to start interview session');
       logger.error('Error initializing interview', {
         component: 'TakeInterview',
@@ -284,6 +289,18 @@ const TakeInterview: React.FC = () => {
                       color: '#ffffff',
                       borderColor: 'rgba(255,255,255,0.3)',
                       fontWeight: 600,
+                      '& .MuiChip-icon': { color: '#ffffff' }
+                    }}
+                  />
+                  <Chip
+                    icon={<LanguageIcon />}
+                    label={interviewLanguage === 'en' ? t('common:languages.en') : t('common:languages.zh-TW')}
+                    variant="outlined"
+                    sx={{ 
+                      backgroundColor: 'rgba(255,255,255,0.1)',
+                      color: '#ffffff',
+                      borderColor: 'rgba(255,255,255,0.2)',
+                      fontSize: '0.75rem',
                       '& .MuiChip-icon': { color: '#ffffff' }
                     }}
                   />

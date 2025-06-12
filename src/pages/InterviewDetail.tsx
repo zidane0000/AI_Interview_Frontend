@@ -18,6 +18,10 @@ import {
   useTheme,
   alpha,
   Stack,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from '@mui/material';
 import {
   ArrowBack as ArrowBackIcon,
@@ -27,6 +31,7 @@ import {
   Assignment as AssignmentIcon,
   CheckCircle as CheckCircleIcon,
   Info as InfoIcon,
+  Language as LanguageIcon,
 } from '@mui/icons-material';
 import { interviewApi } from '../services/api';
 import type { Interview } from '../types';
@@ -35,10 +40,10 @@ const InterviewDetail: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const theme = useTheme();
-  const [interview, setInterview] = useState<Interview | null>(null);
+  const theme = useTheme();  const [interview, setInterview] = useState<Interview | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState<'en' | 'zh-TW'>('en');
 
   const loadInterview = useCallback(async (interviewId: string) => {
     try {
@@ -55,12 +60,20 @@ const InterviewDetail: React.FC = () => {
       setLoading(false);
     }
   }, [t]);
-
   useEffect(() => {
     if (id) {
       loadInterview(id);
     }
   }, [id, loadInterview]);
+  useEffect(() => {
+    if (interview) {
+      setSelectedLanguage(interview.interview_language || 'en');
+    }
+  }, [interview]);
+
+  const handleStartInterview = () => {
+    navigate(`/take-interview/${interview?.id}?lang=${selectedLanguage}`);
+  };
   if (loading) {
     return (
       <Box 
@@ -230,30 +243,73 @@ const InterviewDetail: React.FC = () => {
                   </Stack>
                 </Box>
                 
-                {/* Start Interview Button - Hero CTA */}
-                <Button
-                  variant="contained"
-                  size="large"
-                  startIcon={<PlayIcon />}
-                  onClick={() => navigate(`/take-interview/${interview.id}`)}
-                  sx={{
-                    borderRadius: 4,
-                    px: 4,
-                    py: 2,
-                    fontSize: '1.1rem',
-                    fontWeight: 600,
-                    background: `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.success.dark} 100%)`,
-                    boxShadow: `0 8px 32px ${alpha(theme.palette.success.main, 0.3)}`,
-                    '&:hover': {
-                      background: `linear-gradient(135deg, ${theme.palette.success.dark} 0%, ${theme.palette.success.main} 100%)`,
-                      transform: 'translateY(-2px)',
-                      boxShadow: `0 12px 40px ${alpha(theme.palette.success.main, 0.4)}`
-                    },
-                    transition: 'all 0.3s ease'
-                  }}
-                >
-                  {t('pages:interviewDetail.startInterview')}
-                </Button>
+                {/* Language Selection and Start Interview */}
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 2 }}>
+                  {/* Language Selection */}
+                  <FormControl size="small" sx={{ minWidth: 200 }}>
+                    <InputLabel sx={{ color: 'text.secondary' }}>
+                      {t('pages:interviewDetail.interviewLanguage')}
+                    </InputLabel>
+                    <Select
+                      value={selectedLanguage}
+                      onChange={(e) => setSelectedLanguage(e.target.value as 'en' | 'zh-TW')}
+                      label={t('pages:interviewDetail.interviewLanguage')}
+                      startAdornment={<LanguageIcon sx={{ mr: 1, color: 'text.secondary' }} />}
+                      sx={{
+                        backgroundColor: 'background.paper',
+                        borderRadius: 2,
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: alpha(theme.palette.grey[300], 0.5)
+                        },
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                          borderColor: theme.palette.primary.main
+                        }
+                      }}
+                    >
+                      <MenuItem value="en">
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Box component="span" sx={{ fontSize: '1.2em' }}>🇺🇸</Box>
+                          {t('common:languages.en')}
+                        </Box>
+                      </MenuItem>
+                      <MenuItem value="zh-TW">
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Box component="span" sx={{ fontSize: '1.2em' }}>🇹🇼</Box>
+                          {t('common:languages.zh-TW')}
+                        </Box>
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                  
+                  <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'right', maxWidth: 200 }}>
+                    {t('pages:interviewDetail.languageDescription')}
+                  </Typography>
+
+                  {/* Start Interview Button */}
+                  <Button
+                    variant="contained"
+                    size="large"
+                    startIcon={<PlayIcon />}
+                    onClick={handleStartInterview}
+                    sx={{
+                      borderRadius: 4,
+                      px: 4,
+                      py: 2,
+                      fontSize: '1.1rem',
+                      fontWeight: 600,
+                      background: `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.success.dark} 100%)`,
+                      boxShadow: `0 8px 32px ${alpha(theme.palette.success.main, 0.3)}`,
+                      '&:hover': {
+                        background: `linear-gradient(135deg, ${theme.palette.success.dark} 0%, ${theme.palette.success.main} 100%)`,
+                        transform: 'translateY(-2px)',
+                        boxShadow: `0 12px 40px ${alpha(theme.palette.success.main, 0.4)}`
+                      },
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    {t('pages:interviewDetail.startInterview')}
+                  </Button>
+                </Box>
               </Box>
             </Card>
           </Box>

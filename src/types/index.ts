@@ -4,11 +4,13 @@ export interface Interview {
   candidate_name: string;
   questions: string[];
   created_at: string;
+  interview_language?: 'en' | 'zh-TW';
 }
 
 export interface CreateInterviewRequest {
   candidate_name: string;
   questions: string[];
+  interview_language?: 'en' | 'zh-TW';
 }
 
 export interface SubmitEvaluationRequest {
@@ -49,11 +51,16 @@ export interface ChatInterviewSession {
   messages: ChatMessage[];
   status: 'active' | 'completed';
   created_at: string;
+  interview_language?: 'en' | 'zh-TW';
 }
 
 export interface SendMessageRequest {
   interview_id: string;
   message: string;
+}
+
+export interface StartChatSessionRequest {
+  interview_language?: 'en' | 'zh-TW';
 }
 
 export interface SendMessageResponse {

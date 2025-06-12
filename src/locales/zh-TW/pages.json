@@ -90,7 +90,10 @@
       "您可以在問題間切換",
       "回答完所有問題後提交",
       "提交後將獲得 AI 評估"
-    ]
+    ],
+    "interviewLanguage": "面試語言",
+    "languageDescription": "您可以在開始前更改面試語言",
+    "changeLanguage": "更改語言"
   },
   "takeInterview": {
     "title": "面試進行中",

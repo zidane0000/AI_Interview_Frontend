@@ -37,7 +37,7 @@ import {
 import { interviewApi } from '../services/api';
 
 const MockInterview: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   
   // Resume and job description state
@@ -135,11 +135,12 @@ const MockInterview: React.FC = () => {
             ];
         }
       }
-      
       const interview = await interviewApi.createInterview({
         candidate_name: candidateName.trim(),
         questions: finalQuestions,
-      });      navigate(`/interview/${interview.id}`);
+        interview_language: (i18n.language === 'zh-TW' ? 'zh-TW' : 'en') as 'en' | 'zh-TW'
+      });
+      navigate(`/interview/${interview.id}`);
     } catch (err) {
       setError('Failed to create interview. Please try again.');
       logger.error('Error creating interview', {

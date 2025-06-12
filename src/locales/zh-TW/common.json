@@ -35,8 +35,13 @@
     "draft": "草稿"
   },  "languages": {
     "en": "English",
-    "zh-TW": "繁體中文"
-  },  "errors": {
+    "zh-TW": "繁體中文",
+    "auto": "自動偵測",
+    "selectLanguage": "選擇語言",
+    "interviewLanguage": "面試語言",
+    "uiLanguage": "顯示語言"
+  },
+  "errors": {
     "networkError": "無法連接到伺服器，請確認後端服務是否正在 http://localhost:8080 運行。",
     "serverError": "伺服器錯誤：{{status}}。請重試。",
     "loadInterviews": "無法載入面試記錄。請重試。",

@@ -90,7 +90,10 @@
       "You can navigate between questions",
       "Submit when all questions are answered",
       "AI evaluation will be provided after submission"
-    ]
+    ],
+    "interviewLanguage": "Interview Language",
+    "languageDescription": "Choose the interview language.",
+    "changeLanguage": "Change Language"
   },
   "takeInterview": {
     "title": "Interview Session",

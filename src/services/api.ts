@@ -8,6 +8,7 @@ import type {
   ChatInterviewSession,
   SendMessageRequest,
   SendMessageResponse,
+  StartChatSessionRequest,
 } from '../types';
 import { mockApi } from './mockApi';
 import { logger } from '../utils/logger';
@@ -87,10 +88,9 @@ const realApi = {
     const response = await api.get<Evaluation>(`/evaluation/${id}`);
     return response.data;
   },
-
   // Chat-based interview functions (to be implemented in backend)
-  startChatSession: async (interviewId: string): Promise<ChatInterviewSession> => {
-    const response = await api.post<ChatInterviewSession>(`/interviews/${interviewId}/chat/start`);
+  startChatSession: async (interviewId: string, options?: StartChatSessionRequest): Promise<ChatInterviewSession> => {
+    const response = await api.post<ChatInterviewSession>(`/interviews/${interviewId}/chat/start`, options || {});
     return response.data;
   },
 

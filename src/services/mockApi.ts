@@ -8,6 +8,7 @@ import type {
   ChatInterviewSession,
   SendMessageRequest,
   SendMessageResponse,
+  StartChatSessionRequest,
 } from '../types';
 import { logger } from '../utils/logger';
 
@@ -21,7 +22,8 @@ const mockInterviews: Interview[] = [
       'What are your greatest strengths and weaknesses?',
       'Why are you interested in this position?'
     ],
-    created_at: '2025-05-30T10:30:00Z'
+    created_at: '2025-05-30T10:30:00Z',
+    interview_language: 'en'
   },
   {
     id: '2',
@@ -31,9 +33,9 @@ const mockInterviews: Interview[] = [
       'How do you handle stress and pressure?',
       'Where do you see yourself in 5 years?'
     ],
-    created_at: '2025-05-29T14:20:00Z'
-  },
-  {
+    created_at: '2025-05-29T14:20:00Z',
+    interview_language: 'zh-TW'
+  },  {
     id: '3',
     candidate_name: 'Min-jun Kim', // Korean
     questions: [
@@ -41,7 +43,8 @@ const mockInterviews: Interview[] = [
       'How do you prioritize your tasks?',
       'Describe a time you solved a difficult problem.'
     ],
-    created_at: '2025-05-28T09:15:00Z'
+    created_at: '2025-05-28T09:15:00Z',
+    interview_language: 'en'
   },
   {
     id: '4',
@@ -51,7 +54,8 @@ const mockInterviews: Interview[] = [
       'What is your leadership style?',
       'Tell me about a successful project.'
     ],
-    created_at: '2025-05-27T11:00:00Z'
+    created_at: '2025-05-27T11:00:00Z',
+    interview_language: 'en'
   },
   {
     id: '5',
@@ -61,7 +65,8 @@ const mockInterviews: Interview[] = [
       'How do you keep learning?',
       'Describe your teamwork experience.'
     ],
-    created_at: '2025-05-26T13:45:00Z'
+    created_at: '2025-05-26T13:45:00Z',
+    interview_language: 'en'
   },
   {
     id: '6',
@@ -71,9 +76,9 @@ const mockInterviews: Interview[] = [
       'How do you manage deadlines?',
       'Tell me about a time you failed.'
     ],
-    created_at: '2025-05-25T15:30:00Z'
-  },
-  {
+    created_at: '2025-05-25T15:30:00Z',
+    interview_language: 'zh-TW'
+  },  {
     id: '7',
     candidate_name: 'Sarah Lee',
     questions: [
@@ -81,7 +86,8 @@ const mockInterviews: Interview[] = [
       'What is your biggest achievement?',
       'Describe your ideal job.'
     ],
-    created_at: '2025-05-24T10:10:00Z'
+    created_at: '2025-05-24T10:10:00Z',
+    interview_language: 'en'
   },
   {
     id: '8',
@@ -91,7 +97,8 @@ const mockInterviews: Interview[] = [
       'What is your greatest strength?',
       'How do you handle criticism?'
     ],
-    created_at: '2025-05-23T16:20:00Z'
+    created_at: '2025-05-23T16:20:00Z',
+    interview_language: 'zh-TW'
   },
   {
     id: '9',
@@ -101,7 +108,8 @@ const mockInterviews: Interview[] = [
       'How do you deal with stress?',
       'Describe a time you worked in a team.'
     ],
-    created_at: '2025-05-22T12:00:00Z'
+    created_at: '2025-05-22T12:00:00Z',
+    interview_language: 'en'
   },
   {
     id: '10',
@@ -111,7 +119,8 @@ const mockInterviews: Interview[] = [
       'How do you handle multitasking?',
       'Tell me about a time you exceeded expectations.'
     ],
-    created_at: '2025-05-21T14:50:00Z'
+    created_at: '2025-05-21T14:50:00Z',
+    interview_language: 'zh-TW'
   },
   {
     id: '11',
@@ -121,7 +130,8 @@ const mockInterviews: Interview[] = [
       'How do you set goals?',
       'Describe a time you learned from a mistake.'
     ],
-    created_at: '2025-05-20T09:40:00Z'
+    created_at: '2025-05-20T09:40:00Z',
+    interview_language: 'en'
   },
   {
     id: '12',
@@ -131,7 +141,8 @@ const mockInterviews: Interview[] = [
       'What motivates you to do your best?',
       'Tell me about a time you led a team.'
     ],
-    created_at: '2025-05-19T11:25:00Z'
+    created_at: '2025-05-19T11:25:00Z',
+    interview_language: 'zh-TW'
   }
 ];
 
@@ -286,29 +297,43 @@ const mockEvaluations: Evaluation[] = [
 const mockChatSessions: Record<string, ChatInterviewSession> = {};
 
 // AI response templates for different types of questions
-const aiQuestionTemplates = [
-  "Let's start with a basic question: Tell me about yourself and your background.",
-  "That's interesting! Can you describe a challenging project you've worked on recently?",
-  "Great! How do you handle working under pressure or tight deadlines?",
-  "I'd like to know more about your technical skills. What technologies are you most comfortable with?",
-  "Can you walk me through your problem-solving approach when facing a difficult technical challenge?",
-  "Tell me about a time when you had to learn something new quickly. How did you approach it?",
-  "What motivates you in your work, and what kind of environment helps you perform your best?",
-  "Do you have any questions about our company, the role, or our team culture?"
-];
+const aiQuestionTemplates = {
+  en: [
+    "Let's start with a basic question: Tell me about yourself and your background.",
+    "That's interesting! Can you describe a challenging project you've worked on recently?",
+    "Great! How do you handle working under pressure or tight deadlines?",
+    "I'd like to know more about your technical skills. What technologies are you most comfortable with?",
+    "Can you walk me through your problem-solving approach when facing a difficult technical challenge?",
+    "Tell me about a time when you had to learn something new quickly. How did you approach it?",
+    "What motivates you in your work, and what kind of environment helps you perform your best?",
+    "Do you have any questions about our company, the role, or our team culture?"
+  ],
+  'zh-TW': [
+    "讓我們從一個基本問題開始：請告訴我您的背景和經歷。",
+    "很有趣！您能描述一下最近遇到的一個具有挑戰性的項目嗎？",
+    "很好！您如何處理壓力和緊迫的截止日期？",
+    "我想了解更多關於您的技術技能。您最熟悉哪些技術？",
+    "您能向我介紹一下面對困難技術挑戰時的問題解決方法嗎？",
+    "請告訴我一次您必須快速學習新東西的經歷。您是如何應對的？",
+    "在工作中什麼激勵著您，什麼樣的環境能幫助您發揮最佳表現？",
+    "您對我們公司、職位或團隊文化有什麼問題嗎？"
+  ]
+};
 
-const generateAIResponse = (messageCount: number): string => {
-  if (messageCount <= aiQuestionTemplates.length) {
+const generateAIResponse = (messageCount: number, language: 'en' | 'zh-TW' = 'en'): string => {
+  const templates = aiQuestionTemplates[language];
+  if (messageCount <= templates.length) {
     const index = messageCount - 1; // Adjust for 0-based array
-    return aiQuestionTemplates[index] || aiQuestionTemplates[aiQuestionTemplates.length - 1];
+    return templates[index] || templates[templates.length - 1];
   } else {
-    return "Thank you for your comprehensive answers. Our interview is now complete. You'll receive detailed feedback and evaluation results shortly.";
+    return language === 'zh-TW' 
+      ? "感謝您的詳細回答。我們的面試現在已經完成。您很快就會收到詳細的反饋和評估結果。"
+      : "Thank you for your comprehensive answers. Our interview is now complete. You'll receive detailed feedback and evaluation results shortly.";
   }
 };
 
 // Mock API functions
-export const mockApi = {
-  createInterview: async (data: CreateInterviewRequest): Promise<Interview> => {
+export const mockApi = {  createInterview: async (data: CreateInterviewRequest): Promise<Interview> => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
@@ -316,7 +341,8 @@ export const mockApi = {
       id: Date.now().toString(),
       candidate_name: data.candidate_name,
       questions: data.questions,
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
+      interview_language: data.interview_language || 'en'
     };
     
     mockInterviews.unshift(newInterview);
@@ -459,10 +485,16 @@ export const mockApi = {
     }
     return evaluation;
   },
-
   // Chat-based interview functions
-  startChatSession: async (interviewId: string): Promise<ChatInterviewSession> => {
+  startChatSession: async (interviewId: string, options?: StartChatSessionRequest): Promise<ChatInterviewSession> => {
     await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Get interview to determine default language
+    const interview = mockInterviews.find(i => i.id === interviewId);
+    const interviewLanguage = options?.interview_language || interview?.interview_language || 'en';
+    
+    // Generate initial AI message in the appropriate language
+    const initialMessage = generateAIResponse(1, interviewLanguage);
     
     const session: ChatInterviewSession = {
       id: `chat_${Date.now()}`,
@@ -471,18 +503,18 @@ export const mockApi = {
         {
           id: '1',
           type: 'ai',
-          content: "Hello! Welcome to your interview. I'm excited to learn more about you and your background. Let's start with a basic question: Tell me about yourself and your background.",
+          content: initialMessage,
           timestamp: new Date().toISOString()
         }
       ],
       status: 'active',
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
+      interview_language: interviewLanguage
     };
     
     mockChatSessions[session.id] = session;
     return session;
   },
-
   sendMessage: async (sessionId: string, data: SendMessageRequest): Promise<SendMessageResponse> => {
     await new Promise(resolve => setTimeout(resolve, 800));
     
@@ -499,9 +531,10 @@ export const mockApi = {
       timestamp: new Date().toISOString()
     };
 
-    // Generate AI response based on current user message count + 1
+    // Generate AI response based on current user message count + 1 and session language
     const currentUserCount = session.messages.filter(m => m.type === 'user').length + 1;
-    const aiResponseContent = generateAIResponse(currentUserCount);
+    const sessionLanguage = session.interview_language || 'en';
+    const aiResponseContent = generateAIResponse(currentUserCount, sessionLanguage);
     
     const aiMessage: ChatMessage = {
       id: `msg_${Date.now() + 1}`,
