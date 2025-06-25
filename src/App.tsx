@@ -4,10 +4,10 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { Container, AppBar, Toolbar, Typography, Box, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Home from './pages/Home';
+import History from './pages/History';
 import InterviewDetail from './pages/InterviewDetail';
 import TakeInterview from './pages/TakeInterview';
 import EvaluationResult from './pages/EvaluationResult';
-import MockInterview from './pages/MockInterview';
 import Changelog from './pages/Changelog';
 import I18nTestPage from './components/I18nTestPage';
 import LanguageSwitcher from './components/LanguageSwitcher';
@@ -177,14 +177,14 @@ function App() {
                 <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                   <Button 
                     component={Link}
-                    to="/mock-interview"
+                    to="/history"
                     color="inherit"
                     sx={{ 
                       fontWeight: 500,
                       '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)' }
                     }}
                   >
-                    {t('common:navigation.practice')}
+                    {t('common:navigation.history')}
                   </Button>
                   <Button 
                     component={Link}
@@ -207,12 +207,14 @@ function App() {
           
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/mock-interview" element={<MockInterview />} />
+            <Route path="/history" element={<History />} />
             <Route path="/changelog" element={<Changelog />} />
             <Route path="/i18n-test" element={<I18nTestPage />} />
             <Route path="/interview/:id" element={<InterviewDetail />} />
             <Route path="/take-interview/:id" element={<TakeInterview />} />
             <Route path="/evaluation/:id" element={<EvaluationResult />} />
+            {/* Redirect old mock-interview route to home for backward compatibility */}
+            <Route path="/mock-interview" element={<Navigate to="/" replace />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Box>
