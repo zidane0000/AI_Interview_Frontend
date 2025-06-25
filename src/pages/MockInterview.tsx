@@ -138,7 +138,9 @@ const MockInterview: React.FC = () => {
       const interview = await interviewApi.createInterview({
         candidate_name: candidateName.trim(),
         questions: finalQuestions,
-        interview_language: (i18n.language === 'zh-TW' ? 'zh-TW' : 'en') as 'en' | 'zh-TW'
+        interview_type: interviewType,
+        interview_language: (i18n.language === 'zh-TW' ? 'zh-TW' : 'en') as 'en' | 'zh-TW',
+        job_description: jobDescription.trim() || undefined
       });
       navigate(`/interview/${interview.id}`);
     } catch (err) {

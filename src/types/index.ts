@@ -3,14 +3,18 @@ export interface Interview {
   id: string;
   candidate_name: string;
   questions: string[];
-  created_at: string;
+  interview_type: string; // Required: "general", "technical", or "behavioral"
   interview_language?: 'en' | 'zh-TW';
+  job_description?: string; // Optional: Job description text
+  created_at: string;
 }
 
 export interface CreateInterviewRequest {
   candidate_name: string;
   questions: string[];
+  interview_type: string; // Required: "general", "technical", or "behavioral"
   interview_language?: 'en' | 'zh-TW';
+  job_description?: string; // Optional: Job description text
 }
 
 export interface SubmitEvaluationRequest {
@@ -48,19 +52,18 @@ export interface ChatMessage {
 export interface ChatInterviewSession {
   id: string;
   interview_id: string;
+  session_language?: 'en' | 'zh-TW';
   messages: ChatMessage[];
   status: 'active' | 'completed';
   created_at: string;
-  interview_language?: 'en' | 'zh-TW';
 }
 
 export interface SendMessageRequest {
-  interview_id: string;
   message: string;
 }
 
 export interface StartChatSessionRequest {
-  interview_language?: 'en' | 'zh-TW';
+  session_language?: 'en' | 'zh-TW';
 }
 
 export interface SendMessageResponse {

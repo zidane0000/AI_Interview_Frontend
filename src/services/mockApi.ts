@@ -22,8 +22,10 @@ const mockInterviews: Interview[] = [
       'What are your greatest strengths and weaknesses?',
       'Why are you interested in this position?'
     ],
-    created_at: '2025-05-30T10:30:00Z',
-    interview_language: 'en'
+    interview_type: 'behavioral',
+    interview_language: 'en',
+    job_description: 'Software Engineer position requiring full-stack development skills.',
+    created_at: '2025-05-30T10:30:00Z'
   },
   {
     id: '2',
@@ -33,9 +35,10 @@ const mockInterviews: Interview[] = [
       'How do you handle stress and pressure?',
       'Where do you see yourself in 5 years?'
     ],
-    created_at: '2025-05-29T14:20:00Z',
-    interview_language: 'zh-TW'
-  },  {
+    interview_type: 'general',
+    interview_language: 'zh-TW',
+    job_description: '需要優秀溝通技巧的產品經理職位。',
+    created_at: '2025-05-29T14:20:00Z'  },{
     id: '3',
     candidate_name: 'Min-jun Kim', // Korean
     questions: [
@@ -43,8 +46,10 @@ const mockInterviews: Interview[] = [
       'How do you prioritize your tasks?',
       'Describe a time you solved a difficult problem.'
     ],
-    created_at: '2025-05-28T09:15:00Z',
-    interview_language: 'en'
+    interview_type: 'technical',
+    interview_language: 'en',
+    job_description: 'Backend Developer with experience in microservices architecture.',
+    created_at: '2025-05-28T09:15:00Z'
   },
   {
     id: '4',
@@ -54,8 +59,10 @@ const mockInterviews: Interview[] = [
       'What is your leadership style?',
       'Tell me about a successful project.'
     ],
-    created_at: '2025-05-27T11:00:00Z',
-    interview_language: 'en'
+    interview_type: 'behavioral',
+    interview_language: 'en',
+    job_description: 'Team Lead position requiring strong leadership and communication skills.',
+    created_at: '2025-05-27T11:00:00Z'
   },
   {
     id: '5',
@@ -65,8 +72,10 @@ const mockInterviews: Interview[] = [
       'How do you keep learning?',
       'Describe your teamwork experience.'
     ],
-    created_at: '2025-05-26T13:45:00Z',
-    interview_language: 'en'
+    interview_type: 'general',
+    interview_language: 'en',
+    job_description: 'Junior Developer position for recent graduates.',
+    created_at: '2025-05-26T13:45:00Z'
   },
   {
     id: '6',
@@ -76,8 +85,10 @@ const mockInterviews: Interview[] = [
       'How do you manage deadlines?',
       'Tell me about a time you failed.'
     ],
-    created_at: '2025-05-25T15:30:00Z',
-    interview_language: 'zh-TW'
+    interview_type: 'behavioral',
+    interview_language: 'zh-TW',
+    job_description: '創意總監職位，需要創新思維和領導能力。',
+    created_at: '2025-05-25T15:30:00Z'
   },  {
     id: '7',
     candidate_name: 'Sarah Lee',
@@ -86,8 +97,10 @@ const mockInterviews: Interview[] = [
       'What is your biggest achievement?',
       'Describe your ideal job.'
     ],
-    created_at: '2025-05-24T10:10:00Z',
-    interview_language: 'en'
+    interview_type: 'general',
+    interview_language: 'en',
+    job_description: 'HR Business Partner role focusing on employee relations.',
+    created_at: '2025-05-24T10:10:00Z'
   },
   {
     id: '8',
@@ -97,8 +110,10 @@ const mockInterviews: Interview[] = [
       'What is your greatest strength?',
       'How do you handle criticism?'
     ],
-    created_at: '2025-05-23T16:20:00Z',
-    interview_language: 'zh-TW'
+    interview_type: 'behavioral',
+    interview_language: 'zh-TW',
+    job_description: '專案經理職位，需要優秀的組織和溝通能力。',
+    created_at: '2025-05-23T16:20:00Z'
   },
   {
     id: '9',
@@ -108,8 +123,10 @@ const mockInterviews: Interview[] = [
       'How do you deal with stress?',
       'Describe a time you worked in a team.'
     ],
-    created_at: '2025-05-22T12:00:00Z',
-    interview_language: 'en'
+    interview_type: 'general',
+    interview_language: 'en',
+    job_description: 'Marketing Coordinator position for digital campaigns.',
+    created_at: '2025-05-22T12:00:00Z'
   },
   {
     id: '10',
@@ -119,8 +136,10 @@ const mockInterviews: Interview[] = [
       'How do you handle multitasking?',
       'Tell me about a time you exceeded expectations.'
     ],
-    created_at: '2025-05-21T14:50:00Z',
-    interview_language: 'zh-TW'
+    interview_type: 'behavioral',
+    interview_language: 'zh-TW',
+    job_description: '業務經理職位，需要優秀的銷售和客戶管理技巧。',
+    created_at: '2025-05-21T14:50:00Z'
   },
   {
     id: '11',
@@ -130,8 +149,10 @@ const mockInterviews: Interview[] = [
       'How do you set goals?',
       'Describe a time you learned from a mistake.'
     ],
-    created_at: '2025-05-20T09:40:00Z',
-    interview_language: 'en'
+    interview_type: 'general',
+    interview_language: 'en',
+    job_description: 'Customer Success Manager role in tech company.',
+    created_at: '2025-05-20T09:40:00Z'
   },
   {
     id: '12',
@@ -141,8 +162,10 @@ const mockInterviews: Interview[] = [
       'What motivates you to do your best?',
       'Tell me about a time you led a team.'
     ],
-    created_at: '2025-05-19T11:25:00Z',
-    interview_language: 'zh-TW'
+    interview_type: 'technical',
+    interview_language: 'zh-TW',
+    job_description: '資深軟體工程師職位，需要技術領導經驗。',
+    created_at: '2025-05-19T11:25:00Z'
   }
 ];
 
@@ -341,8 +364,10 @@ export const mockApi = {  createInterview: async (data: CreateInterviewRequest):
       id: Date.now().toString(),
       candidate_name: data.candidate_name,
       questions: data.questions,
-      created_at: new Date().toISOString(),
-      interview_language: data.interview_language || 'en'
+      interview_type: data.interview_type,
+      interview_language: data.interview_language || 'en',
+      job_description: data.job_description,
+      created_at: new Date().toISOString()
     };
     
     mockInterviews.unshift(newInterview);
@@ -483,18 +508,17 @@ export const mockApi = {  createInterview: async (data: CreateInterviewRequest):
     if (!evaluation) {
       throw new Error('Evaluation not found');
     }
-    return evaluation;
-  },
+    return evaluation;  },
   // Chat-based interview functions
   startChatSession: async (interviewId: string, options?: StartChatSessionRequest): Promise<ChatInterviewSession> => {
     await new Promise(resolve => setTimeout(resolve, 500));
     
     // Get interview to determine default language
     const interview = mockInterviews.find(i => i.id === interviewId);
-    const interviewLanguage = options?.interview_language || interview?.interview_language || 'en';
+    const sessionLanguage = options?.session_language || interview?.interview_language || 'en';
     
     // Generate initial AI message in the appropriate language
-    const initialMessage = generateAIResponse(1, interviewLanguage);
+    const initialMessage = generateAIResponse(1, sessionLanguage);
     
     const session: ChatInterviewSession = {
       id: `chat_${Date.now()}`,
@@ -509,7 +533,7 @@ export const mockApi = {  createInterview: async (data: CreateInterviewRequest):
       ],
       status: 'active',
       created_at: new Date().toISOString(),
-      interview_language: interviewLanguage
+      session_language: sessionLanguage
     };
     
     mockChatSessions[session.id] = session;
@@ -529,11 +553,9 @@ export const mockApi = {  createInterview: async (data: CreateInterviewRequest):
       type: 'user',
       content: data.message,
       timestamp: new Date().toISOString()
-    };
-
-    // Generate AI response based on current user message count + 1 and session language
+    };    // Generate AI response based on current user message count + 1 and session language
     const currentUserCount = session.messages.filter(m => m.type === 'user').length + 1;
-    const sessionLanguage = session.interview_language || 'en';
+    const sessionLanguage = session.session_language || 'en';
     const aiResponseContent = generateAIResponse(currentUserCount, sessionLanguage);
     
     const aiMessage: ChatMessage = {

@@ -74,7 +74,7 @@ const TakeInterview: React.FC = () => {
       const interviewData = await interviewApi.getInterview(interviewId);
       setInterview(interviewData);
         // Start chat session with language parameter
-      const session = await interviewApi.startChatSession(interviewId, { interview_language: language });
+      const session = await interviewApi.startChatSession(interviewId, { session_language: language });
       setChatSession(session);} catch (err) {
       setError('Failed to start interview session');
       logger.error('Error initializing interview', {
@@ -110,7 +110,6 @@ const TakeInterview: React.FC = () => {
       // 清空輸入框
       setCurrentMessage('');      // 發送訊息到 API 並等待 AI 回應
       const response = await interviewApi.sendMessage(chatSession.id, {
-        interview_id: chatSession.interview_id,
         message: messageToSend
       });
 

@@ -5,8 +5,7 @@
 export const formatDate = (dateString: string, locale: string = 'en'): string => {
   const localeMap: Record<string, string> = {
     'en': 'en-US',
-    'zh-TW': 'zh-TW',
-    'zh-CN': 'zh-CN'
+    'zh-TW': 'zh-TW'
   };
 
   const targetLocale = localeMap[locale] || 'en-US';
@@ -23,8 +22,7 @@ export const formatDate = (dateString: string, locale: string = 'en'): string =>
 export const formatDateShort = (dateString: string, locale: string = 'en'): string => {
   const localeMap: Record<string, string> = {
     'en': 'en-US',
-    'zh-TW': 'zh-TW',
-    'zh-CN': 'zh-CN'
+    'zh-TW': 'zh-TW'
   };
 
   const targetLocale = localeMap[locale] || 'en-US';

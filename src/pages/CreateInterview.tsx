@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { logger } from '../utils/logger';
 import {
   Paper,
@@ -26,6 +27,7 @@ import { interviewApi } from '../services/api';
 
 const CreateInterview: React.FC = () => {
   const navigate = useNavigate();
+  const { i18n } = useTranslation();
   const [candidateName, setCandidateName] = useState('');
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [questions, setQuestions] = useState<string[]>([]);
@@ -74,6 +76,8 @@ const CreateInterview: React.FC = () => {
       const interview = await interviewApi.createInterview({
         candidate_name: candidateName.trim(),
         questions,
+        interview_type: 'general', // Default to general type for CreateInterview
+        interview_language: (i18n.language === 'zh-TW' ? 'zh-TW' : 'en') as 'en' | 'zh-TW'
       });
 
       navigate(`/interview/${interview.id}`);    } catch (err) {
