@@ -10,7 +10,6 @@ import {
   Box,
   Chip,
   IconButton,
-  Alert,
   Divider,
   Card,
   CardContent,
@@ -24,6 +23,9 @@ import {
   Quiz as QuizIcon,
 } from '@mui/icons-material';
 import { interviewApi } from '../services/api';
+import ErrorDisplay from '../components/ErrorDisplay';
+import { createAppError } from '../services/errorService';
+import type { AppError } from '../types/errors';
 
 const CreateInterview: React.FC = () => {
   const navigate = useNavigate();
@@ -32,7 +34,7 @@ const CreateInterview: React.FC = () => {
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [questions, setQuestions] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<AppError | null>(null);
 
   const defaultQuestions = [
     "Tell me about yourself and your background.",
@@ -65,7 +67,16 @@ const CreateInterview: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!candidateName.trim() || questions.length === 0) {
-      setError('Please provide candidate name and at least one question');
+      setError({
+        type: 'validation',
+        userMessage: 'Please provide a candidate name and at least one question to create the interview.',
+        recoverable: false,
+        timestamp: new Date(),
+        context: {
+          component: 'CreateInterview',
+          action: 'validation'
+        }
+      });
       return;
     }
 
@@ -80,8 +91,15 @@ const CreateInterview: React.FC = () => {
         interview_language: (i18n.language === 'zh-TW' ? 'zh-TW' : 'en') as 'en' | 'zh-TW'
       });
 
-      navigate(`/interview/${interview.id}`);    } catch (err) {
-      setError('Failed to create interview. Please try again.');
+      navigate(`/interview/${interview.id}`);
+    } catch (err) {
+      const appError = createAppError(err, {
+        component: 'CreateInterview',
+        action: 'createInterview',
+        fallbackType: 'client'
+      });
+      setError(appError);
+      
       logger.error('Error creating interview', {
         component: 'CreateInterview',
         action: 'handleSubmit',
@@ -89,6 +107,13 @@ const CreateInterview: React.FC = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRetry = () => {
+    if (candidateName.trim() && questions.length > 0) {
+      const fakeEvent = { preventDefault: () => {} } as React.FormEvent;
+      handleSubmit(fakeEvent);
     }
   };
 
@@ -104,9 +129,14 @@ const CreateInterview: React.FC = () => {
       </Box>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          {error}
-        </Alert>      )}      
+        <ErrorDisplay 
+          error={error}
+          title="Unable to Create Interview"
+          action="createInterview"
+          onRetry={handleRetry}
+          showRetry={error.recoverable}
+        />
+      )}      
       <Box 
         sx={{
           display: 'grid',

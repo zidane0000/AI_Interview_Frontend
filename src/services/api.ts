@@ -12,6 +12,7 @@ import type {
 } from '../types';
 import { mockApi } from './mockApi';
 import { logger } from '../utils/logger';
+import { retryApiCall } from './retryService';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true';
@@ -35,26 +36,40 @@ api.interceptors.request.use(  (config) => {
   }
 );
 
-// Response interceptor
+// Response interceptor with enhanced error handling
 api.interceptors.response.use(
   (response) => {
     return response;
-  },  (error) => {
+  },
+  (error) => {
     logger.error('API Error', {
       component: 'API',
-      data: error.response?.data || error.message
+      data: {
+        url: error.config?.url,
+        method: error.config?.method,
+        status: error.response?.status,
+        message: error.message,
+      }
     });
+    
     return Promise.reject(error);
   }
 );
 
-// Real API functions (for when backend is ready)
+// Real API functions with retry logic for critical operations
 const realApi = {
-  // Create a new interview
+  // Create a new interview (CRITICAL - with retry)
   createInterview: async (data: CreateInterviewRequest): Promise<Interview> => {
-    const response = await api.post<Interview>('/interviews', data);
-    return response.data;
+    return retryApiCall(
+      async () => {
+        const response = await api.post<Interview>('/interviews', data);
+        return response.data;
+      },
+      '/interviews',
+      'POST'
+    );
   },
+
   // Get all interviews with optional query parameters for pagination, filtering, and sorting
   getInterviews: async (params?: {
     limit?: number;
@@ -67,8 +82,14 @@ const realApi = {
     sort_by?: 'date' | 'name' | 'status';
     sort_order?: 'asc' | 'desc';
   }): Promise<ListInterviewsResponse> => {
-    const response = await api.get<ListInterviewsResponse>('/interviews', { params });
-    return response.data;
+    return retryApiCall(
+      async () => {
+        const response = await api.get<ListInterviewsResponse>('/interviews', { params });
+        return response.data;
+      },
+      '/interviews',
+      'GET'
+    );
   },
 
   // Get specific interview
@@ -88,15 +109,29 @@ const realApi = {
     const response = await api.get<Evaluation>(`/evaluation/${id}`);
     return response.data;
   },
-  // Chat-based interview functions (to be implemented in backend)
+
+  // Chat-based interview functions (CRITICAL - with retry)
   startChatSession: async (interviewId: string, options?: StartChatSessionRequest): Promise<ChatInterviewSession> => {
-    const response = await api.post<ChatInterviewSession>(`/interviews/${interviewId}/chat/start`, options || {});
-    return response.data;
+    return retryApiCall(
+      async () => {
+        const response = await api.post<ChatInterviewSession>(`/interviews/${interviewId}/chat/start`, options || {});
+        return response.data;
+      },
+      `/interviews/${interviewId}/chat/start`,
+      'POST'
+    );
   },
 
+  // Send message (CRITICAL - with retry)
   sendMessage: async (sessionId: string, data: SendMessageRequest): Promise<SendMessageResponse> => {
-    const response = await api.post<SendMessageResponse>(`/chat/${sessionId}/message`, data);
-    return response.data;
+    return retryApiCall(
+      async () => {
+        const response = await api.post<SendMessageResponse>(`/chat/${sessionId}/message`, data);
+        return response.data;
+      },
+      `/chat/${sessionId}/message`,
+      'POST'
+    );
   },
 
   getChatSession: async (sessionId: string): Promise<ChatInterviewSession> => {

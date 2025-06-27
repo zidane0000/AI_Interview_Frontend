@@ -31,6 +31,9 @@ import {
 } from '@mui/icons-material';
 import { interviewApi } from '../services/api';
 import type { Interview, ChatInterviewSession } from '../types';
+import ErrorDisplay from '../components/ErrorDisplay';
+import { createAppError } from '../services/errorService';
+import type { AppError } from '../types/errors';
 
 const TakeInterview: React.FC = () => {
   const { t } = useTranslation();
@@ -43,7 +46,7 @@ const TakeInterview: React.FC = () => {
   const [currentMessage, setCurrentMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<AppError | null>(null);
   const [interviewLanguage, setInterviewLanguage] = useState<'en' | 'zh-TW'>('en');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const initializingRef = useRef(false);  useEffect(() => {
@@ -75,8 +78,14 @@ const TakeInterview: React.FC = () => {
       setInterview(interviewData);
         // Start chat session with language parameter
       const session = await interviewApi.startChatSession(interviewId, { session_language: language });
-      setChatSession(session);} catch (err) {
-      setError('Failed to start interview session');
+      setChatSession(session);    } catch (err) {
+      const appError = createAppError(err, {
+        component: 'TakeInterview',
+        action: 'initializeInterview',
+        fallbackType: 'server'
+      });
+      setError(appError);
+      
       logger.error('Error initializing interview', {
         component: 'TakeInterview',
         action: 'initializeInterview',
@@ -128,7 +137,13 @@ const TakeInterview: React.FC = () => {
           status: response.session_status === 'completed' ? 'completed' : prev.status
         } : null);
       }    } catch (err) {
-      setError('Failed to send message. Please try again.');
+      const appError = createAppError(err, {
+        component: 'TakeInterview',
+        action: 'sendMessage',
+        fallbackType: 'network'
+      });
+      setError(appError);
+      
       logger.error('Error sending message', {
         component: 'TakeInterview',
         action: 'handleSendMessage',
@@ -148,7 +163,13 @@ const TakeInterview: React.FC = () => {
       setLoading(true);
       const evaluation = await interviewApi.endChatSession(chatSession.id);
       navigate(`/evaluation/${evaluation.id}`);    } catch (err) {
-      setError('Failed to end interview. Please try again.');
+      const appError = createAppError(err, {
+        component: 'TakeInterview',
+        action: 'endInterview',
+        fallbackType: 'server'
+      });
+      setError(appError);
+      
       logger.error('Error ending interview', {
         component: 'TakeInterview',
         action: 'handleEndInterview',
@@ -231,15 +252,25 @@ const TakeInterview: React.FC = () => {
         </Box>
         
         <Container maxWidth="lg" sx={{ py: 4 }}>
-          <Alert 
-            severity="error" 
-            sx={{ 
-              borderRadius: 3,
-              boxShadow: `0 4px 20px ${alpha(theme.palette.error.main, 0.2)}`
-            }}
-          >
-            {error || t('pages:takeInterview.sessionError')}
-          </Alert>
+          {error ? (
+            <ErrorDisplay 
+              error={error}
+              title="Interview Session Error"
+              action="loadData"
+              onRetry={() => id && initializeInterview(id, interviewLanguage)}
+              showRetry={true}
+            />
+          ) : (
+            <Alert 
+              severity="error" 
+              sx={{ 
+                borderRadius: 3,
+                boxShadow: `0 4px 20px ${alpha(theme.palette.error.main, 0.2)}`
+              }}
+            >
+              {t('pages:takeInterview.sessionError')}
+            </Alert>
+          )}
         </Container>
       </Box>
     );
@@ -527,16 +558,14 @@ const TakeInterview: React.FC = () => {
           <Container maxWidth="lg" sx={{ py: 3 }}>
             <Box sx={{ maxWidth: '800px', mx: 'auto' }}>
               {error && (
-                <Alert 
-                  severity="error" 
-                  sx={{ 
-                    mb: 3,
-                    borderRadius: 3,
-                    boxShadow: `0 4px 20px ${alpha(theme.palette.error.main, 0.15)}`
-                  }}
-                >
-                  {error}
-                </Alert>
+                <ErrorDisplay 
+                  error={error}
+                  title="Message Error"
+                  action="sendMessage"
+                  onRetry={() => handleSendMessage()}
+                  showRetry={currentMessage.trim().length > 0}
+                  compact={true}
+                />
               )}
               
               <Stack spacing={2}>
